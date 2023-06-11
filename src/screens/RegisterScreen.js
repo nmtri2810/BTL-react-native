@@ -8,7 +8,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const val = useContext(AuthContext);
 
-  const handleLoginPress = () => {
+  const handleRegisterPress = () => {
     if(isValidEmail(email) == false) {
       alert("Email not in correct format");
       return;
@@ -25,19 +25,12 @@ const LoginScreen = ({ navigation }) => {
     }
   };
 
-  const handleForgotPasswordPress = () => {
-    // Handle forgot password logic here
-    // You can navigate to a ForgotPasswordScreen or show a modal
-    alert('Forgot Password');
-  };
-
-  const handleRegisterPress = () => {
-    navigation.navigate('Register');
+  const handleLoginPress = () => {
+    navigation.navigate('Login');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Restaurant Reservation</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter email"
@@ -51,16 +44,20 @@ const LoginScreen = ({ navigation }) => {
         value={password}
         onChangeText={(password) => setPassword(password)}
       />
-      <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleForgotPasswordPress}>
-        <Text style={styles.linkText}>Forgot Password?</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Re-enter password"
+        secureTextEntry
+        value={password}
+        onChangeText={(password) => setPassword(password)}
+      />
+      <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
+        <Text style={styles.buttonText}>Register</Text>
       </TouchableOpacity>
       <View style={styles.registerContainer}>
-        <Text style={styles.newUserText}>New User?</Text>
-        <TouchableOpacity onPress={handleRegisterPress}>
-          <Text style={styles.registerText}>Register</Text>
+        <Text style={styles.newUserText}>Already have an account?</Text>
+        <TouchableOpacity onPress={handleLoginPress}>
+          <Text style={styles.registerText}>Login</Text>
         </TouchableOpacity>
       </View>
     </View>
