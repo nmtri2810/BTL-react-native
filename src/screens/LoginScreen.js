@@ -1,13 +1,26 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { isValidEmail, isValidPassword } from '../utilities/Validation';
 
 const LoginScreen = ({ navigation }) => {
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const handleLoginPress = () => {
-    // Assume login successful
-    navigation.navigate('Home');
+    if(isValidEmail(email) == false) {
+      alert("Email not in correct format");
+      return;
+    } 
+    if(isValidPassword(password) == false) {
+      alert("password must be longer than 3 characters");
+      return;
+    } 
+    if(email == "trinm@gmail.com" && password == 123456) {
+      navigation.navigate('Home');
+    } else {
+      alert("Invalid email or password");
+      return;
+    }
   };
 
   const handleForgotPasswordPress = () => {
@@ -27,16 +40,16 @@ const LoginScreen = ({ navigation }) => {
       <Text style={styles.heading}>Restaurant Reservation</Text>
       <TextInput
         style={styles.input}
-        placeholder="Username"
-        value={username}
-        onChangeText={(text) => setUsername(text)}
+        placeholder="Email"
+        value={email}
+        onChangeText={(email) => setEmail(email)}
       />
       <TextInput
         style={styles.input}
         placeholder="Password"
         secureTextEntry
         value={password}
-        onChangeText={(text) => setPassword(text)}
+        onChangeText={(password) => setPassword(password)}
       />
       <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
         <Text style={styles.buttonText}>Login</Text>
@@ -97,7 +110,7 @@ const styles = StyleSheet.create({
   registerContainer: {
     flexDirection: 'row',
     position: 'absolute',
-    bottom: 16,
+    bottom: 20,
   },
   newUserText: {
     marginRight: 4,
