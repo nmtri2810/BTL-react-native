@@ -2,11 +2,14 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { isValidEmail, isValidPassword } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 
-const LoginScreen = ({ navigation }) => {
+const RegisterScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const val = useContext(AuthContext);
+  const [rePassword, setRePassword] = useState('');
+
+  const { register, isLoading } = useContext(AuthContext);
 
   const handleRegisterPress = () => {
     if(isValidEmail(email) == false) {
@@ -14,15 +17,19 @@ const LoginScreen = ({ navigation }) => {
       return;
     } 
     if(isValidPassword(password) == false) {
-      alert("password must be longer than 3 characters");
-      return;
-    } 
-    if(email == "trinm@gmail.com" && password == 123456) {
-      navigation.navigate('Home');
-    } else {
-      alert("Invalid email or password");
+      alert("Password must be longer than 3 characters");
       return;
     }
+    if(rePassword.length == 0) {
+      alert("Please confirm password");
+      return;
+    } else if(password != rePassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    
+    register(email, password);
+
   };
 
   const handleLoginPress = () => {
@@ -31,11 +38,14 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Spinner visible={isLoading} />
       <TextInput
         style={styles.input}
         placeholder="Enter email"
         value={email}
         onChangeText={(email) => setEmail(email)}
+        selectTextOnFocus={false}
+        keyboardType="email-address"
       />
       <TextInput
         style={styles.input}
@@ -44,12 +54,13 @@ const LoginScreen = ({ navigation }) => {
         value={password}
         onChangeText={(password) => setPassword(password)}
       />
+      <TextInput style={{height: 0.01}}/> 
       <TextInput
         style={styles.input}
         placeholder="Re-enter password"
         secureTextEntry
-        value={password}
-        onChangeText={(password) => setPassword(password)}
+        value={rePassword}
+        onChangeText={(rePassword) => setRePassword(rePassword)}
       />
       <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
         <Text style={styles.buttonText}>Register</Text>
@@ -118,4 +129,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginScreen;
+export default RegisterScreen;

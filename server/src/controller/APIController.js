@@ -19,10 +19,13 @@ let createNewUser = async (req, res) => {
     }
 
     await pool.execute('INSERT INTO user(email, password) VALUES (?, ?)', 
-    [email, password])
+        [email, password])
+
+    const [rows, fields] = await pool.execute('SELECT * FROM user where email = ?',
+        [email]);
 
     return res.status(200).json({
-        message: 'ok'
+        data: rows[0]
     })
 }
 
