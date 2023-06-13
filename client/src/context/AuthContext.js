@@ -1,6 +1,7 @@
 import React, { createContext, useState } from "react";
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from "../config/config";
 
 export const AuthContext = createContext();
 
@@ -15,7 +16,7 @@ export const AuthProvider = ({children}) => {
         setIsLoading(true);
     
         return new Promise((resolve, reject) => {
-          axios.get(`http://10.90.219.213:3000/api/users/${email}`)
+          axios.get(`${BASE_URL}/${email}`)
             .then(res => {
                 let userInfo = res.data;
                 if (userInfo.data && userInfo.data.email.toLowerCase() === email.toLowerCase()) {
@@ -37,7 +38,7 @@ export const AuthProvider = ({children}) => {
     const register = (email, password) => {
         setIsLoading(true);
 
-        axios.post('http://10.90.219.213:3000/api/signup', {
+        axios.post(`${BASE_URL}/signup`, {
             email, password
         }).then(res => {
             let userInfo = res.data;
@@ -53,7 +54,7 @@ export const AuthProvider = ({children}) => {
     const login = (email, password) => {
         setIsLoading(true);
 
-
+        
     }
 
     return (
