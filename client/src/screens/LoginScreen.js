@@ -2,11 +2,13 @@ import React, { useState, useContext } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { isValidEmail, isValidPassword } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const val = useContext(AuthContext);
+
+  const { checkUserExist, login, isLoading } = useContext(AuthContext);
 
   const handleLoginPress = () => {
     if(isValidEmail(email) == false) {
@@ -16,18 +18,38 @@ const LoginScreen = ({ navigation }) => {
     if(isValidPassword(password) == false) {
       alert("password must be longer than 3 characters");
       return;
-    } 
-    if(email == "trinm@gmail.com" && password == 123456) {
-      navigation.navigate('Home');
-    } else {
-      alert("Invalid email or password");
-      return;
     }
+
+    checkUserExist(email)
+      .then((exists) => {
+        if (exists) {
+          login(email, password)
+            .then((checkPassword) => {
+              if(checkPassword) {
+                navigation.navigate('Home');
+                return;
+              } else {
+                alert("Email or password is incorrect");
+                return;
+              }
+            })
+            .catch((e) => {
+              console.log(e);
+              alert('An error occurred while checking email login');
+            })
+        } else {
+          alert("Email or password is incorrect");
+          return;
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        alert('An error occurred while checking email existence');
+      });
+
   };
 
   const handleForgotPasswordPress = () => {
-    // Handle forgot password logic here
-    // You can navigate to a ForgotPasswordScreen or show a modal
     alert('Forgot Password');
   };
 
@@ -37,12 +59,15 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <Spinner visible={isLoading} />
       <Text style={styles.heading}>Restaurant Reservation</Text>
       <TextInput
         style={styles.input}
         placeholder="Enter email"
         value={email}
         onChangeText={(email) => setEmail(email)}
+        selectTextOnFocus={false}
+        keyboardType="email-address"
       />
       <TextInput
         style={styles.input}

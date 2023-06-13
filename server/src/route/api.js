@@ -6,8 +6,9 @@ let router = express.Router()
 const initApiRoute = (app) => {
     router.get('/users', APIController.getAllUser)
     router.get('/users/:email', APIController.getUser)
-    router.post('/signup', APIController.signUp)
-    
+    router.post('/register', APIController.register)
+    router.post('/login', APIController.login)
+
     router.put('/update-user', APIController.updateUser)
     router.delete('/delete-user/:id', APIController.deleteUser)
 

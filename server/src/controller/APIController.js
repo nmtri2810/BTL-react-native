@@ -18,7 +18,7 @@ let getUser = async (req, res) => {
     })
 }
 
-let signUp = async (req, res) => {
+let register = async (req, res) => {
     let { email, password } = req.body
 
     if( !email || !password ) {
@@ -37,6 +37,27 @@ let signUp = async (req, res) => {
         data: rows[0]
     })
 }
+
+let login = async (req, res) => {
+    let { email, password } = req.body
+
+    if( !email || !password ) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+
+    const [rows, fields] = await pool.execute('SELECT * FROM user where email = ? and password = ?',
+        [email, password]);
+
+    console.log(rows[0])
+
+    return res.status(200).json({
+        data: rows[0]
+    })
+}
+
+
 
 let updateUser = async (req, res) => {
     let { firstName, lastName, email, address, id } = req.body
@@ -74,7 +95,8 @@ let deleteUser = async (req, res) => {
 export default {
     getAllUser,
     getUser,
-    signUp,
+    register,
+    login,
     updateUser,
     deleteUser
 }

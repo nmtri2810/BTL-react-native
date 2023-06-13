@@ -16,7 +16,7 @@ export const AuthProvider = ({children}) => {
         setIsLoading(true);
     
         return new Promise((resolve, reject) => {
-          axios.get(`${BASE_URL}/${email}`)
+            axios.get(`${BASE_URL}/users/${email}`)
             .then(res => {
                 let userInfo = res.data;
                 if (userInfo.data && userInfo.data.email.toLowerCase() === email.toLowerCase()) {
@@ -38,10 +38,11 @@ export const AuthProvider = ({children}) => {
     const register = (email, password) => {
         setIsLoading(true);
 
-        axios.post(`${BASE_URL}/signup`, {
+        axios.post(`${BASE_URL}/register`, {
             email, password
         }).then(res => {
             let userInfo = res.data;
+            console.log(userInfo);
             setUserInfo(userInfo);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
@@ -54,13 +55,37 @@ export const AuthProvider = ({children}) => {
     const login = (email, password) => {
         setIsLoading(true);
 
-        
+        return new Promise((resolve, reject) => {
+            axios.post(`${BASE_URL}/login`, {
+                email, password
+            })
+            .then(res => {
+                let userInfo = res.data;
+                if(Object.keys(userInfo).length === 0) {
+                    console.log(userInfo);
+                    resolve(false);
+                    setIsLoading(false);
+                } else {
+                    console.log(userInfo);
+                    resolve(true);
+                    setUserInfo(userInfo);
+                    AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+                    setIsLoading(false);
+                }
+            })
+            .catch(e => {
+                console.log(`login error ${e}`);
+                reject(e);
+                setIsLoading(false);
+            });
+        });
     }
 
     return (
         <AuthContext.Provider value={{
             checkUserExist,
-            register, 
+            register,
+            login,
             isLoading, 
             userInfo
         }}>
