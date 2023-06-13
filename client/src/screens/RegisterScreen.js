@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import { isValidEmail, isValidPassword } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
@@ -9,7 +9,7 @@ const RegisterScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [rePassword, setRePassword] = useState('');
 
-  const { register, isLoading } = useContext(AuthContext);
+  const { checkUserExist, register, isLoading } = useContext(AuthContext);
 
   const handleRegisterPress = () => {
     if(isValidEmail(email) == false) {
@@ -28,7 +28,21 @@ const RegisterScreen = ({ navigation }) => {
       return;
     }
     
-    register(email, password);
+    checkUserExist(email)
+      .then((exists) => {
+        if (exists) {
+          alert('Email already exists');
+          return;
+        } else {
+          register(email, password);
+          navigation.navigate('Home');
+          return;
+        }
+      })
+      .catch((e) => {
+        console.log(e);
+        alert('An error occurred while checking email existence');
+      });
 
   };
 

@@ -9,17 +9,41 @@ export const AuthProvider = ({children}) => {
     const [userInfo, setUserInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
+    //note: localhost ip changed!
+
+    const checkUserExist = (email) => {
+        setIsLoading(true);
+    
+        return new Promise((resolve, reject) => {
+          axios.get(`http://10.90.219.213:3000/api/users/${email}`)
+            .then(res => {
+                let userInfo = res.data;
+                if (userInfo.data && userInfo.data.email.toLowerCase() === email.toLowerCase()) {
+                    setIsLoading(false);
+                    resolve(true);
+                } else {
+                    setIsLoading(false);
+                    resolve(false);
+                }
+            })
+            .catch(e => {
+                setIsLoading(false);
+                console.log(`check error ${e}`);
+                reject(e);
+            });
+        });
+    }
+
     const register = (email, password) => {
         setIsLoading(true);
 
-        axios.post('http://192.168.0.104:3000/api/signup', {
+        axios.post('http://10.90.219.213:3000/api/signup', {
             email, password
         }).then(res => {
             let userInfo = res.data;
             setUserInfo(userInfo);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
-            console.log(userInfo);
         }).catch(e => {
             console.log(`register error ${e}`);
             setIsLoading(false);
@@ -33,6 +57,13 @@ export const AuthProvider = ({children}) => {
     }
 
     return (
-        <AuthContext.Provider value={{register, isLoading, userInfo}}>{children}</AuthContext.Provider>
+        <AuthContext.Provider value={{
+            checkUserExist,
+            register, 
+            isLoading, 
+            userInfo
+        }}>
+            {children}
+        </AuthContext.Provider>
     );
 }

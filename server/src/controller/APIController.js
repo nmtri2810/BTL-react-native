@@ -9,7 +9,16 @@ let getAllUser = async (req, res) => {
     })
 }
 
-let createNewUser = async (req, res) => {
+let getUser = async (req, res) => {
+    let email = req.params.email
+    const [rows, fields] = await pool.execute('SELECT * FROM user where email = ?', [email]);
+
+    return res.status(200).json({
+        data: rows[0]
+    })
+}
+
+let signUp = async (req, res) => {
     let { email, password } = req.body
 
     if( !email || !password ) {
@@ -64,7 +73,8 @@ let deleteUser = async (req, res) => {
 
 export default {
     getAllUser,
-    createNewUser,
+    getUser,
+    signUp,
     updateUser,
     deleteUser
 }
