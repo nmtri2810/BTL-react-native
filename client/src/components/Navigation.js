@@ -5,9 +5,8 @@ import { AuthContext } from "../context/AuthContext";
 import { useContext } from "react";
 
 import LoginScreen from '../screens/LoginScreen';
-import HomeScreen from '../screens/HomeScreen';
-import ReservationScreen from '../screens/ReservationScreen';
 import RegisterScreen from '../screens/RegisterScreen';
+import BottomTabNavigation from "./BottomTabNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -17,17 +16,17 @@ const Navigation = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {userInfo.data ? 
+                {/* replace userInfo.data with true  */}
+                {true ? 
                 (
                     <>
-                    <Stack.Screen name="Home" component={HomeScreen} />
-                    <Stack.Screen name="Reservation" component={ReservationScreen} />
+                    <Stack.Screen name="BottomNav" component={BottomTabNavigation} options={{headerShown: false}} />
                     </>
                 ) : 
                 (
                     <>
-                    <Stack.Screen name="Login" component={LoginScreen} />
-                    <Stack.Screen name="Register" component={RegisterScreen} />
+                    <Stack.Screen name="Login" component={LoginScreen} options={{headerShown: false}} />
+                    <Stack.Screen name="Register" component={RegisterScreen} options={{headerShown: false}} />
                     </>
                 )
                 }

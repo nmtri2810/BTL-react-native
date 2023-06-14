@@ -3,25 +3,19 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
-const HomeScreen = ({ navigation }) => {
-  const { userInfo, isLoading,logout } = useContext(AuthContext);
+const HomeScreen = () => {
+  const { userInfo, isLoading } = useContext(AuthContext);
 
   const handleLogoutPress = () => {
     console.log("logout");
     logout();
   };
 
-  const handleReservationPress = () => {
-    navigation.navigate('Reservation');
-  };
-
   return (
     <View style={styles.container}>
       <Spinner visible={isLoading} />
-      <Text style={styles.heading}>Welcome {userInfo.data.email}</Text>
-      <TouchableOpacity style={styles.button} onPress={handleReservationPress}>
-        <Text style={styles.buttonText}>Go to Reservation</Text>
-      </TouchableOpacity>
+      {/* replace {userInfo.data.email} with user */}
+      <Text style={styles.heading}>Welcome user</Text> 
       <TouchableOpacity style={[styles.button, {backgroundColor: 'red'}]} onPress={handleLogoutPress}>
         <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
