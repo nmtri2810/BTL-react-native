@@ -26,7 +26,7 @@ const LoginScreen = ({ navigation }) => {
           login(email, password)
             .then((checkPassword) => {
               if(checkPassword) {
-                navigation.navigate('Home');
+                console.log("login");
                 return;
               } else {
                 alert("Email or password is incorrect");

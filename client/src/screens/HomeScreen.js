@@ -1,16 +1,29 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { AuthContext } from '../context/AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const HomeScreen = ({ navigation }) => {
+  const { userInfo, isLoading,logout } = useContext(AuthContext);
+
+  const handleLogoutPress = () => {
+    console.log("logout");
+    logout();
+  };
+
   const handleReservationPress = () => {
     navigation.navigate('Reservation');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Home Screen</Text>
+      <Spinner visible={isLoading} />
+      <Text style={styles.heading}>Welcome {userInfo.data.email}</Text>
       <TouchableOpacity style={styles.button} onPress={handleReservationPress}>
         <Text style={styles.buttonText}>Go to Reservation</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={[styles.button, {backgroundColor: 'red'}]} onPress={handleLogoutPress}>
+        <Text style={styles.buttonText}>Logout</Text>
       </TouchableOpacity>
     </View>
   );
@@ -26,7 +39,6 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 24,
   },
   button: {
     width: '100%',
@@ -35,6 +47,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 24,
   },
   buttonText: {
     color: '#fff',

@@ -34,8 +34,8 @@ const RegisterScreen = ({ navigation }) => {
           alert('Email already exists');
           return;
         } else {
+          console.log("login");
           register(email, password);
-          navigation.navigate('Home');
           return;
         }
       })
