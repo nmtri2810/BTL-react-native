@@ -1,10 +1,10 @@
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
-import HomeScreen from '../bottomTabs/HomeScreen';
-import ReservationScreen from '../bottomTabs/ReservationScreen';
-import NotificationScreen from '../bottomTabs/NotificationScreen';
-import AccountScreen from '../bottomTabs/Account';
+import HomeScreen from '../bottomTabScreens/HomeScreen';
+import ReservationScreen from '../bottomTabScreens/ReservationScreen';
+import NotificationScreen from '../bottomTabScreens/NotificationScreen';
+import AccountScreen from '../bottomTabScreens/AccountScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 

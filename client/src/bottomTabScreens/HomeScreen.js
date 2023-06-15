@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-const AccountScreen = () => {
+const HomeScreen = () => {
   return (
     <View style={styles.container}>
-      <Text>Account Screen</Text>
+      <Text>Home</Text>
     </View>
   );
 };
@@ -18,4 +18,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default AccountScreen;
+export default HomeScreen;
