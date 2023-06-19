@@ -57,24 +57,49 @@ let login = async (req, res) => {
     })
 }
 
+let reservate = async (req, res) => {
+    let { reservationTime, numOfPeople, notes, email } = req.body
 
-
-let updateUser = async (req, res) => {
-    let { firstName, lastName, email, address, id } = req.body
-
-    if( !firstName || !lastName || !email || !address || !id ) {
+    if( !reservationTime || !numOfPeople || !notes || !email ) {
         return res.status(200).json({
             message: 'missing required params'
         })
     }
 
-    await pool.execute('update user set firstName = ?, lastName = ?, email = ?, address = ? where id = ?', 
-    [firstName, lastName, email, address, id])
+    await pool.execute('INSERT INTO reservation(reservation_time, num_of_people, notes, email) VALUES (?, ?, ?, ?)', 
+        [reservationTime, numOfPeople, notes, email])
+
+    const [rows, fields] = await pool.execute('select reservation.* from reservation join user on reservation.email = user.email where reservation.email = ? order by reservation.id desc limit 1',
+        [email]);
 
     return res.status(200).json({
-        message: 'ok'
+        data: rows[0]
     })
 }
+
+let updateUser = async (req, res) => {
+    let { name, phoneNum, email } = req.body
+
+    if( !name || !phoneNum || !email ) {
+        return res.status(200).json({
+            message: 'missing required params'
+        })
+    }
+
+    await pool.execute('update user set name = ?, phone_num = ? where email = ?', 
+    [name, phoneNum, email])
+
+    const [rows, fields] = await pool.execute('SELECT * FROM user where email = ?',
+    [email]);
+
+    return res.status(200).json({
+        data: rows[0]
+    })
+}
+
+
+
+
 
 let deleteUser = async (req, res) => {
     let userId = req.params.id
@@ -97,6 +122,7 @@ export default {
     getUser,
     register,
     login,
+    reservate,
     updateUser,
     deleteUser
 }

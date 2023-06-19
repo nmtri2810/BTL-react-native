@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({children}) => {
 
     const [userInfo, setUserInfo] = useState({});
+    const [reservationInfo, setReservationInfo] = useState({});
     const [isLoading, setIsLoading] = useState(false);
 
     //note: localhost ip changed!
@@ -94,14 +95,51 @@ export const AuthProvider = ({children}) => {
         }
     }
 
+    const reservate = (reservationTime, numOfPeople, notes, email) => {
+        setIsLoading(true);
+
+        axios.post(`${BASE_URL}/reservate`, {
+            reservationTime, numOfPeople, notes, email
+        }).then(res => {
+            let reservationInfo = res.data;
+            console.log(reservationInfo);
+            setReservationInfo(reservationInfo);
+            AsyncStorage.setItem('reservationInfo', JSON.stringify(reservationInfo));
+            setIsLoading(false);
+        }).catch(e => {
+            console.log(`reservate error ${e}`);
+            setIsLoading(false);
+        });
+    }
+
+    const updateUser = (name, phoneNum, email) => {
+        setIsLoading(true);
+
+        axios.put(`${BASE_URL}/update-user`, {
+            name, phoneNum, email
+        }).then(res => {
+            let userInfo = res.data;
+            console.log(userInfo);
+            setUserInfo(userInfo);
+            AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+            setIsLoading(false);
+        }).catch(e => {
+            console.log(`update error ${e}`);
+            setIsLoading(false);
+        });
+    }
+
     return (
         <AuthContext.Provider value={{
             checkUserExist,
             register,
             login,
             logout,
+            reservate,
+            updateUser,
             isLoading, 
-            userInfo
+            userInfo,
+            reservationInfo
         }}>
             {children}
         </AuthContext.Provider>

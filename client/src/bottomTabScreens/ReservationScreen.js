@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
 import { isValidEmail, isValidReservation } from '../utilities/Validation';
+import { AuthContext } from '../context/AuthContext';
+import Spinner from 'react-native-loading-spinner-overlay';
 
 const ReservationScreen = () => {
-  const [reservationTime, setReservationTime] = useState("");
+  const [reservationTimeOutput, setReservationTimeOutput] = useState("");
+  const [reservationTimeSaved, setReservationTimeSaved] = useState("");
   const [numOfPeople, setNumOfPeople] = useState("");
   const [name, setName] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
@@ -13,6 +16,8 @@ const ReservationScreen = () => {
   const [notes, setNotes] = useState("");
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const { reservate, updateUser, isLoading } = useContext(AuthContext);
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -32,8 +37,8 @@ const ReservationScreen = () => {
       alert('Please make a reservation at least 30 minutes in advance');
       hideDatePicker();
     } else {
-      console.log("A datetime has been picked: ", moment(datetime).format('YYYYMMDDHHmmss'));
-      setReservationTime(moment(datetime).format('MMMM, Do YYYY HH:mm'));
+      setReservationTimeOutput(moment(datetime).format('MMMM, Do YYYY HH:mm'));
+      setReservationTimeSaved(moment(datetime).format('YYYYMMDDHHmmss'));
       hideDatePicker();
     }
   };
@@ -44,9 +49,18 @@ const ReservationScreen = () => {
       return;
     } 
 
-    isValidReservation(reservationTime, numOfPeople, name, phoneNum);
+    if(isValidReservation(reservationTimeOutput, numOfPeople, name, phoneNum) == false) {
+      console.log("Not valid");
+      return;
+    }
     
-    console.log(`${reservationTime.toString()}, ${numOfPeople}, ${name}, ${phoneNum}, ${email}, ${notes}`)
+    if(notes.length === 0) {
+      setNotes(" ");
+    }
+    
+    reservate(reservationTimeSaved, numOfPeople, notes, email);
+    updateUser(name, phoneNum, email);
+    return;
   }
 
   return (
@@ -55,13 +69,14 @@ const ReservationScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
     >
+      <Spinner visible={isLoading} />
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <Text style={styles.title}>Reservation Screen</Text>
 
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Reservation Time <Text style={{color: 'red'}}>*</Text></Text>
           <TouchableOpacity onPress={showDatePicker}>
-            <Text style={styles.input}>{reservationTime ? reservationTime.toString() : "Enter reservation time"}</Text>
+            <Text style={styles.input}>{reservationTimeOutput ? reservationTimeOutput.toString() : "Enter reservation time"}</Text>
           </TouchableOpacity>
           <DateTimePickerModal 
             isVisible={isDatePickerVisible}

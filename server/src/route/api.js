@@ -8,8 +8,9 @@ const initApiRoute = (app) => {
     router.get('/users/:email', APIController.getUser)
     router.post('/register', APIController.register)
     router.post('/login', APIController.login)
-
+    router.post('/reservate', APIController.reservate)
     router.put('/update-user', APIController.updateUser)
+    
     router.delete('/delete-user/:id', APIController.deleteUser)
 
     return app.use('/api/', router)
