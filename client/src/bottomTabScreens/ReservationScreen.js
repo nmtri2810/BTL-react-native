@@ -23,9 +23,19 @@ const ReservationScreen = () => {
   };
 
   const handleConfirm = (datetime) => {
-    console.log("A datetime has been picked: ", datetime);
-    setReservationTime(moment(datetime).format('MMMM, Do YYYY HH:mm'));
-    hideDatePicker();
+    const currentDateTime = moment();
+    const selectedDateTime = moment(datetime);
+
+    const timeDifference = selectedDateTime.diff(currentDateTime, 'minutes');
+
+    if(timeDifference < 29) {
+      alert('Please make a reservation at least 30 minutes in advance');
+      hideDatePicker();
+    } else {
+      console.log("A datetime has been picked: ", moment(datetime).format('YYYYMMDDHHmmss'));
+      setReservationTime(moment(datetime).format('MMMM, Do YYYY HH:mm'));
+      hideDatePicker();
+    }
   };
 
   const handleSubmitPress = () => {
@@ -35,7 +45,7 @@ const ReservationScreen = () => {
     } 
 
     isValidReservation(reservationTime, numOfPeople, name, phoneNum);
-
+    
     console.log(`${reservationTime.toString()}, ${numOfPeople}, ${name}, ${phoneNum}, ${email}, ${notes}`)
   }
 
@@ -56,6 +66,7 @@ const ReservationScreen = () => {
           <DateTimePickerModal 
             isVisible={isDatePickerVisible}
             mode="datetime"
+            minimumDate={new Date()}
             onConfirm={handleConfirm}
             onCancel={hideDatePicker}
             is24Hour={true}
@@ -66,7 +77,7 @@ const ReservationScreen = () => {
           <Text style={styles.label}>Number of People <Text style={{color: 'red'}}>*</Text></Text>
           <TextInput 
             style={styles.input} 
-            placeholder="Enter number of people"
+            placeholder="2"
             value={numOfPeople}
             onChangeText={(numOfPeople) => setNumOfPeople(numOfPeople)}
             selectTextOnFocus={false}
@@ -78,7 +89,7 @@ const ReservationScreen = () => {
           <Text style={styles.label}>Name <Text style={{color: 'red'}}>*</Text></Text>
           <TextInput 
             style={styles.input} 
-            placeholder="Enter your name"
+            placeholder="Nguyen Van A"
             value={name}
             onChangeText={(name) => setName(name)}
             selectTextOnFocus={false}
@@ -89,7 +100,7 @@ const ReservationScreen = () => {
           <Text style={styles.label}>Phone Number <Text style={{color: 'red'}}>*</Text></Text>
           <TextInput 
             style={styles.input} 
-            placeholder="Enter your phone number" 
+            placeholder="0123456789" 
             keyboardType="phone-pad" 
             value={phoneNum}
             onChangeText={(phoneNum) => setPhoneNum(phoneNum)}
@@ -101,7 +112,7 @@ const ReservationScreen = () => {
           <Text style={styles.label}>Email <Text style={{color: 'red'}}>*</Text></Text>
           <TextInput 
             style={styles.input} 
-            placeholder="Enter your email" 
+            placeholder="abc@gmail.com" 
             keyboardType="email-address" 
             value={email}
             onChangeText={(email) => setEmail(email)}

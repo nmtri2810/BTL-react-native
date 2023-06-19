@@ -1,6 +1,6 @@
 import React from 'react';
 
-import Navigation from './src/components/Navigation';
+import Navigation from './src/navigation/Navigation';
 import { AuthProvider } from './src/context/AuthContext';
 import { StatusBar } from 'expo-status-bar';
 

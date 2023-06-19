@@ -5,9 +5,27 @@ export const isValidPassword = (password) =>
     (password.length >= 3)
 
 export const isValidReservation = (reservationTime, numOfPeople, name, phoneNum) => {
-    if(reservationTime == null || numOfPeople == null || name == null || phoneNum == null) {
-        alert("all need required")
+    // if(reservationTime.length === 0 || numOfPeople.length === 0 || name.length === 0 || phoneNum.length === 0) {
+    //     alert("Please complete all the information");
+    //     return false;
+    // }
+    if(numOfPeople.length === 0 || name.length === 0 || phoneNum.length === 0) {
+        alert("Please complete all the information");
         return false;
     }
-    console.log(typeof reservationTime)
+    if(true) {
+        
+    }
+    if(/^\d+$/.test(numOfPeople) == false) {
+        alert("Please enter the correct number of people");
+        return false;
+    }
+    if(/^[A-Za-z\s]*$/.test(name) == false) {
+        alert("Please enter the correct name");
+        return false;
+    }
+    if(/^\d{10}$/.test(phoneNum) == false) {
+        alert("Please enter the correct phone number");
+        return false;
+    }
 }
