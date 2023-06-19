@@ -3,3 +3,11 @@ export const isValidEmail = (email) =>
 
 export const isValidPassword = (password) => 
     (password.length >= 3)
+
+export const isValidReservation = (reservationTime, numOfPeople, name, phoneNum) => {
+    if(reservationTime == null || numOfPeople == null || name == null || phoneNum == null) {
+        alert("all need required")
+        return false;
+    }
+    console.log(typeof reservationTime)
+}
