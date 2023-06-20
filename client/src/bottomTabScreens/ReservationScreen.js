@@ -5,6 +5,7 @@ import moment from 'moment';
 import { isValidEmail, isValidReservation } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
+import { useNavigation } from '@react-navigation/native';
 
 const ReservationScreen = () => {
   const [reservationTimeOutput, setReservationTimeOutput] = useState("");
@@ -16,6 +17,8 @@ const ReservationScreen = () => {
   const [notes, setNotes] = useState("");
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+
+  const navigation = useNavigation();
 
   const { reservate, updateUser, isLoading } = useContext(AuthContext);
 
@@ -60,6 +63,7 @@ const ReservationScreen = () => {
     
     reservate(reservationTimeSaved, numOfPeople, notes, email);
     updateUser(name, phoneNum, email);
+    navigation.navigate('Success');
     return;
   }
 

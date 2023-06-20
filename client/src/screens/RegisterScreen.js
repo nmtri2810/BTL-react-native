@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { isValidEmail, isValidPassword } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -51,47 +51,56 @@ const RegisterScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Spinner visible={isLoading} />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter email"
-        value={email}
-        onChangeText={(email) => setEmail(email)}
-        selectTextOnFocus={false}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter password"
-        secureTextEntry
-        value={password}
-        onChangeText={(password) => setPassword(password)}
-      />
-      <TextInput style={{height: 0.01}}/> 
-      <TextInput
-        style={styles.input}
-        placeholder="Re-enter password"
-        secureTextEntry
-        value={rePassword}
-        onChangeText={(rePassword) => setRePassword(rePassword)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-      <View style={styles.registerContainer}>
-        <Text style={styles.newUserText}>Already have an account?</Text>
-        <TouchableOpacity onPress={handleLoginPress}>
-          <Text style={styles.registerText}>Login</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <View style={styles.contentContainer}>
+        <Spinner visible={isLoading} />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter email"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
+          selectTextOnFocus={false}
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter password"
+          secureTextEntry
+          value={password}
+          onChangeText={(password) => setPassword(password)}
+        />
+        <TextInput style={{height: 0.01}}/> 
+        <TextInput
+          style={styles.input}
+          placeholder="Re-enter password"
+          secureTextEntry
+          value={rePassword}
+          onChangeText={(rePassword) => setRePassword(rePassword)}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleRegisterPress}>
+          <Text style={styles.buttonText}>Register</Text>
         </TouchableOpacity>
+        <View style={styles.registerContainer}>
+          <Text style={styles.newUserText}>Already have an account?</Text>
+          <TouchableOpacity onPress={handleLoginPress}>
+            <Text style={styles.registerText}>Login</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,

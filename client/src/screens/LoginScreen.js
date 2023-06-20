@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
 import { isValidEmail, isValidPassword } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
@@ -58,43 +58,52 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Spinner visible={isLoading} />
-      <Text style={styles.heading}>Restaurant Reservation</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Enter email"
-        value={email}
-        onChangeText={(email) => setEmail(email)}
-        selectTextOnFocus={false}
-        keyboardType="email-address"
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Enter password"
-        secureTextEntry
-        value={password}
-        onChangeText={(password) => setPassword(password)}
-      />
-      <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={handleForgotPasswordPress}>
-        <Text style={styles.linkText}>Forgot Password?</Text>
-      </TouchableOpacity>
-      <View style={styles.registerContainer}>
-        <Text style={styles.newUserText}>New User?</Text>
-        <TouchableOpacity onPress={handleRegisterPress}>
-          <Text style={styles.registerText}>Register</Text>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
+    >
+      <View style={styles.contentContainer}>
+        <Spinner visible={isLoading} />
+        <Text style={styles.heading}>Restaurant Reservation</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter email"
+          value={email}
+          onChangeText={(email) => setEmail(email)}
+          selectTextOnFocus={false}
+          keyboardType="email-address"
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Enter password"
+          secureTextEntry
+          value={password}
+          onChangeText={(password) => setPassword(password)}
+        />
+        <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
+          <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
+        <TouchableOpacity onPress={handleForgotPasswordPress}>
+          <Text style={styles.linkText}>Forgot Password?</Text>
+        </TouchableOpacity>
+        <View style={styles.registerContainer}>
+          <Text style={styles.newUserText}>New User?</Text>
+          <TouchableOpacity onPress={handleRegisterPress}>
+            <Text style={styles.registerText}>Register</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  contentContainer: {
+    flexGrow: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,

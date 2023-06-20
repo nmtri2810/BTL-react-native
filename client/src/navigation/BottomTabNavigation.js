@@ -1,3 +1,4 @@
+import React, { useEffect } from 'react';
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
@@ -8,7 +9,18 @@ import AccountScreen from '../bottomTabScreens/AccountScreen';
 
 const Tab = createMaterialBottomTabNavigator();
 
-const BottomTabNavigation = () => {
+const BottomTabNavigation = ({ navigation }) => {
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      navigation.reset({
+        index: 0,
+        routes: [{ name: 'Home' }],
+      });
+    });
+
+    return unsubscribe;
+  }, [navigation]);
+
     return (
         <Tab.Navigator
           initialRouteName="Home"
@@ -17,46 +29,46 @@ const BottomTabNavigation = () => {
           shifting={true}
           barStyle={{ backgroundColor: "white" }}
         >
-            <Tab.Screen 
-              name="Home" 
-              component={HomeScreen} 
-              options={{
-                tabBarLabel: 'Home',
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="home-outline" color={color} size={26} />
-                ),
-              }}
-            />
-            <Tab.Screen 
-              name="Reservation" 
-              component={ReservationScreen} 
-              options={{
-                tabBarLabel: 'Reservation',
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="calendar-clock-outline" color={color} size={26} />
-                ),
-              }}
-            />
-            <Tab.Screen 
-              name="Notification" 
-              component={NotificationScreen}
-              options={{
-                tabBarLabel: 'Notification',
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="bell-outline" color={color} size={26} />
-                ),
-              }}
-            />
-            <Tab.Screen 
-              name="Account" 
-              component={AccountScreen} 
-              options={{
-                tabBarLabel: 'Account',
-                tabBarIcon: ({ color }) => (
-                  <MaterialCommunityIcons name="account-outline" color={color} size={26} />
-                ),
-              }}
-            />
+          <Tab.Screen 
+            name="Home" 
+            component={HomeScreen} 
+            options={{
+              tabBarLabel: 'Home',
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="home-outline" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen 
+            name="Reservation" 
+            component={ReservationScreen} 
+            options={{
+              tabBarLabel: 'Reservation',
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="calendar-clock-outline" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen 
+            name="Notification" 
+            component={NotificationScreen}
+            options={{
+              tabBarLabel: 'Notification',
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="bell-outline" color={color} size={26} />
+              ),
+            }}
+          />
+          <Tab.Screen 
+            name="Account" 
+            component={AccountScreen} 
+            options={{
+              tabBarLabel: 'Account',
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons name="account-outline" color={color} size={26} />
+              ),
+            }}
+          />
         </Tab.Navigator>
     );
 }

@@ -7,6 +7,7 @@ import { useContext } from "react";
 import LoginScreen from '../screens/LoginScreen';
 import RegisterScreen from '../screens/RegisterScreen';
 import BottomTabNavigation from "./BottomTabNavigation";
+import SuccessScreen from '../screens/SuccessScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,6 +22,7 @@ const Navigation = () => {
                 (
                     <>
                     <Stack.Screen name="BottomNav" component={BottomTabNavigation} options={{headerShown: false}} />
+                    <Stack.Screen name="Success" component={SuccessScreen} />
                     </>
                 ) : 
                 (
