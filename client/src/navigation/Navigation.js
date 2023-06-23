@@ -17,8 +17,7 @@ const Navigation = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {/* replace userInfo.data with true  */}
-                {true ? 
+                {userInfo.data ? 
                 (
                     <>
                     <Stack.Screen name="BottomNav" component={BottomTabNavigation} options={{headerShown: false}} />

@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from 'moment';
-import { isValidEmail, isValidReservation } from '../utilities/Validation';
+import { isValidReservation } from '../utilities/Validation';
 import { AuthContext } from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 import { useNavigation } from '@react-navigation/native';
@@ -13,14 +13,15 @@ const ReservationScreen = () => {
   const [numOfPeople, setNumOfPeople] = useState("");
   const [name, setName] = useState("");
   const [phoneNum, setPhoneNum] = useState("");
-  const [email, setEmail] = useState("");
   const [notes, setNotes] = useState("");
 
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
   const navigation = useNavigation();
 
-  const { reservate, updateUser, isLoading } = useContext(AuthContext);
+  // email in userInfo.data.email
+  const { reservate, updateUser, userInfo, isLoading } = useContext(AuthContext);
+  const email = userInfo.data.email;
 
   const showDatePicker = () => {
     setDatePickerVisibility(true);
@@ -46,25 +47,22 @@ const ReservationScreen = () => {
     }
   };
 
-  const handleSubmitPress = () => {
-    if(isValidEmail(email) == false) {
-      alert("Email not in correct format");
+  const handleSubmitPress = async () => {
+    try {
+      if(isValidReservation(reservationTimeOutput, numOfPeople, name, phoneNum) == false) {
+        console.log("Not valid");
+        return;
+      }
+      
+      const updatedNotes = notes.length === 0 ? "No Notes" : notes;
+      
+      await reservate(reservationTimeSaved, numOfPeople, updatedNotes, email);
+      await updateUser(name, phoneNum, email);
+      navigation.navigate('Success');
       return;
-    } 
-
-    if(isValidReservation(reservationTimeOutput, numOfPeople, name, phoneNum) == false) {
-      console.log("Not valid");
-      return;
+    } catch (error) {
+      console.log("Error:", error);
     }
-    
-    if(notes.length === 0) {
-      setNotes(" ");
-    }
-    
-    reservate(reservationTimeSaved, numOfPeople, notes, email);
-    updateUser(name, phoneNum, email);
-    navigation.navigate('Success');
-    return;
   }
 
   return (
@@ -131,10 +129,8 @@ const ReservationScreen = () => {
           <Text style={styles.label}>Email <Text style={{color: 'red'}}>*</Text></Text>
           <TextInput 
             style={styles.input} 
-            placeholder="abc@gmail.com" 
             keyboardType="email-address" 
             value={email}
-            onChangeText={(email) => setEmail(email)}
             selectTextOnFocus={false}
           />
         </View>

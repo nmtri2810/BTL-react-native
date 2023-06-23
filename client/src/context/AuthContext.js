@@ -43,7 +43,6 @@ export const AuthProvider = ({children}) => {
             email, password
         }).then(res => {
             let userInfo = res.data;
-            console.log(userInfo);
             setUserInfo(userInfo);
             AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
             setIsLoading(false);
@@ -63,11 +62,9 @@ export const AuthProvider = ({children}) => {
             .then(res => {
                 let userInfo = res.data;
                 if(Object.keys(userInfo).length === 0) {
-                    console.log(userInfo);
                     resolve(false);
                     setIsLoading(false);
                 } else {
-                    console.log(userInfo);
                     resolve(true);
                     setUserInfo(userInfo);
                     AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
@@ -98,36 +95,48 @@ export const AuthProvider = ({children}) => {
     const reservate = (reservationTime, numOfPeople, notes, email) => {
         setIsLoading(true);
 
-        axios.post(`${BASE_URL}/reservate`, {
-            reservationTime, numOfPeople, notes, email
-        }).then(res => {
-            let reservationInfo = res.data;
-            console.log(reservationInfo);
-            setReservationInfo(reservationInfo);
-            AsyncStorage.setItem('reservationInfo', JSON.stringify(reservationInfo));
-            setIsLoading(false);
-        }).catch(e => {
-            console.log(`reservate error ${e}`);
-            setIsLoading(false);
+        return new Promise((resolve, reject) => {
+        axios
+            .post(`${BASE_URL}/reservate`, {
+                reservationTime, numOfPeople, notes, email,
+            })
+            .then(async (res) => {
+                let reservationInfo = res.data;
+                setReservationInfo(reservationInfo);
+                await AsyncStorage.setItem('reservationInfo', JSON.stringify(reservationInfo));
+                setIsLoading(false);
+                resolve(reservationInfo);
+            })
+            .catch((e) => {
+                console.log(`reservate error ${e}`);
+                setIsLoading(false);
+                reject(e);
+            });
         });
-    }
+    };
 
     const updateUser = (name, phoneNum, email) => {
         setIsLoading(true);
-
-        axios.put(`${BASE_URL}/update-user`, {
-            name, phoneNum, email
-        }).then(res => {
-            let userInfo = res.data;
-            console.log(userInfo);
-            setUserInfo(userInfo);
-            AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
-            setIsLoading(false);
-        }).catch(e => {
-            console.log(`update error ${e}`);
-            setIsLoading(false);
+    
+        return new Promise((resolve, reject) => {
+        axios
+            .put(`${BASE_URL}/update-user`, {
+                name, phoneNum, email,
+            })
+            .then((res) => {
+                let userInfo = res.data;
+                setUserInfo(userInfo);
+                AsyncStorage.setItem('userInfo', JSON.stringify(userInfo));
+                setIsLoading(false);
+                resolve(userInfo);
+            })
+            .catch((e) => {
+                console.log(`update error ${e}`);
+                setIsLoading(false);
+                reject(e);
+            });
         });
-    }
+    };
 
     return (
         <AuthContext.Provider value={{

@@ -4,7 +4,7 @@ import { AuthContext } from '../context/AuthContext';
 import Spinner from 'react-native-loading-spinner-overlay';
 
 const AccountScreen = () => {
-  const { userInfo, isLoading } = useContext(AuthContext);
+  const { logout, userInfo, isLoading } = useContext(AuthContext);
 
   const handleLogoutPress = () => {
     console.log("logout");
@@ -33,9 +33,8 @@ const AccountScreen = () => {
       <Spinner visible={isLoading} />
 
       <View style={styles.header}>
-        {/* replace userInfo.data.email... with username  */}
         <Image source={{uri: 'https://i.natgeofe.com/n/548467d8-c5f1-4551-9f58-6817a8d2c45e/NationalGeographic_2572187_square.jpg'}} style={styles.userImage} />
-        <Text style={styles.username}>username</Text>
+        <Text style={styles.username}>{userInfo.data.email}</Text>
       </View>
 
       <FlatList

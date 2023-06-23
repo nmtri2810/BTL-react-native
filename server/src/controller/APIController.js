@@ -50,8 +50,6 @@ let login = async (req, res) => {
     const [rows, fields] = await pool.execute('SELECT * FROM user where email = ? and password = ?',
         [email, password]);
 
-    console.log(rows[0])
-
     return res.status(200).json({
         data: rows[0]
     })
