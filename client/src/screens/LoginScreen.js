@@ -1,158 +1,142 @@
-import React, { useState, useContext } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, KeyboardAvoidingView, Platform } from 'react-native';
-import { isValidEmail, isValidPassword } from '../utilities/Validation';
-import { AuthContext } from '../context/AuthContext';
-import Spinner from 'react-native-loading-spinner-overlay';
+import React, { useState, useContext } from "react";
+import {
+    View,
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
+import { isValidEmail, isValidPassword } from "../utilities/Validation";
+import { AuthContext } from "../context/AuthContext";
+import Spinner from "react-native-loading-spinner-overlay";
+import MyButton from "../components/MyButton";
+import MyInput from "../components/MyInput";
 
 const LoginScreen = ({ navigation }) => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-  const { checkUserExist, login, isLoading } = useContext(AuthContext);
+    const { checkUserExist, login, isLoading } = useContext(AuthContext);
 
-  const handleLoginPress = () => {
-    if(isValidEmail(email) == false) {
-      alert("Email not in correct format");
-      return;
-    } 
-    if(isValidPassword(password) == false) {
-      alert("password must be longer than 3 characters");
-      return;
-    }
+    const handleLoginPress = () => {
+        if (isValidEmail(email) == false) {
+            alert("Email not in correct format");
+            return;
+        }
+        if (isValidPassword(password) == false) {
+            alert("password must be longer than 3 characters");
+            return;
+        }
 
-    checkUserExist(email)
-      .then((exists) => {
-        if (exists) {
-          login(email, password)
-            .then((checkPassword) => {
-              if(checkPassword) {
-                console.log("login");
-                return;
-              } else {
-                alert("Email or password is incorrect");
-                return;
-              }
+        checkUserExist(email)
+            .then((exists) => {
+                if (exists) {
+                    login(email, password)
+                        .then((checkPassword) => {
+                            if (checkPassword) {
+                                console.log("login");
+                                return;
+                            } else {
+                                alert("Email or password is incorrect");
+                                return;
+                            }
+                        })
+                        .catch((e) => {
+                            console.log(e);
+                            alert(
+                                "An error occurred while checking email login"
+                            );
+                        });
+                } else {
+                    alert("Email or password is incorrect");
+                    return;
+                }
             })
             .catch((e) => {
-              console.log(e);
-              alert('An error occurred while checking email login');
-            })
-        } else {
-          alert("Email or password is incorrect");
-          return;
-        }
-      })
-      .catch((e) => {
-        console.log(e);
-        alert('An error occurred while checking email existence');
-      });
+                console.log(e);
+                alert("An error occurred while checking email existence");
+            });
+    };
 
-  };
+    const handleForgotPasswordPress = () => {
+        alert("Forgot Password");
+    };
 
-  const handleForgotPasswordPress = () => {
-    alert('Forgot Password');
-  };
+    const handleRegisterPress = () => {
+        navigation.navigate("Register");
+    };
 
-  const handleRegisterPress = () => {
-    navigation.navigate('Register');
-  };
-
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <View style={styles.contentContainer}>
-        <Spinner visible={isLoading} />
-        <Text style={styles.heading}>Restaurant Reservation</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter email"
-          value={email}
-          onChangeText={(email) => setEmail(email)}
-          selectTextOnFocus={false}
-          keyboardType="email-address"
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="Enter password"
-          secureTextEntry
-          value={password}
-          onChangeText={(password) => setPassword(password)}
-        />
-        <TouchableOpacity style={styles.button} onPress={handleLoginPress}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleForgotPasswordPress}>
-          <Text style={styles.linkText}>Forgot Password?</Text>
-        </TouchableOpacity>
-        <View style={styles.registerContainer}>
-          <Text style={styles.newUserText}>New User?</Text>
-          <TouchableOpacity onPress={handleRegisterPress}>
-            <Text style={styles.registerText}>Register</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    </KeyboardAvoidingView>
-  );
+    return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        >
+            <View style={styles.contentContainer}>
+                <Spinner visible={isLoading} />
+                <Text style={styles.heading}>Restaurant Reservation</Text>
+                <MyInput
+                    placeholder="Enter email"
+                    value={email}
+                    onChangeText={(email) => setEmail(email)}
+                    selectTextOnFocus={false}
+                    keyboardType="email-address"
+                />
+                <MyInput
+                    placeholder="Enter password"
+                    value={password}
+                    onChangeText={(password) => setPassword(password)}
+                    secureTextEntry={true}
+                />
+                <MyButton text="Login" handlePress={handleLoginPress} />
+                <TouchableOpacity onPress={handleForgotPasswordPress}>
+                    <Text style={styles.linkText}>Forgot Password?</Text>
+                </TouchableOpacity>
+                <View style={styles.registerContainer}>
+                    <Text style={styles.newUserText}>New User?</Text>
+                    <TouchableOpacity onPress={handleRegisterPress}>
+                        <Text style={styles.registerText}>Register</Text>
+                    </TouchableOpacity>
+                </View>
+            </View>
+        </KeyboardAvoidingView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-  },
-  input: {
-    width: '100%',
-    height: 40,
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 8,
-    marginBottom: 16,
-    paddingHorizontal: 10,
-  },
-  button: {
-    width: '100%',
-    height: 40,
-    backgroundColor: 'blue',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 16,
-  },
-  buttonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
-  linkText: {
-    color: 'blue',
-    textDecorationLine: 'underline',
-    marginBottom: 8,
-  },
-  registerContainer: {
-    flexDirection: 'row',
-    position: 'absolute',
-    bottom: 20,
-  },
-  newUserText: {
-    marginRight: 4,
-  },
-  registerText: {
-    color: 'blue',
-    textDecorationLine: 'underline',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+    },
+    contentContainer: {
+        flexGrow: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 16,
+    },
+    heading: {
+        fontSize: 24,
+        fontWeight: "bold",
+        marginBottom: 24,
+    },
+    linkText: {
+        color: "#000",
+        textDecorationLine: "underline",
+        marginBottom: 8,
+    },
+    registerContainer: {
+        flexDirection: "row",
+        position: "absolute",
+        bottom: 20,
+    },
+    newUserText: {
+        marginRight: 4,
+    },
+    registerText: {
+        color: "#000",
+        textDecorationLine: "underline",
+    },
 });
 
 export default LoginScreen;

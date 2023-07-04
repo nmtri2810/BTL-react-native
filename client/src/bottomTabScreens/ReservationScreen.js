@@ -1,206 +1,214 @@
-import React, { useContext, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
+import React, { useContext, useEffect, useState } from "react";
+import {
+    Text,
+    TouchableOpacity,
+    StyleSheet,
+    ScrollView,
+    KeyboardAvoidingView,
+    Platform,
+} from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
-import moment from 'moment';
-import { isValidReservation } from '../utilities/Validation';
-import { AuthContext } from '../context/AuthContext';
-import Spinner from 'react-native-loading-spinner-overlay';
-import { useNavigation } from '@react-navigation/native';
+import moment from "moment";
+import { isValidReservation } from "../utilities/Validation";
+import { AuthContext } from "../context/AuthContext";
+import Spinner from "react-native-loading-spinner-overlay";
+import { useNavigation } from "@react-navigation/native";
+import MyButton from "../components/MyButton";
+import FormGroupInput from "../components/FormGroupInput";
+import MyInput from "../components/MyInput";
 
 const ReservationScreen = () => {
-  const [reservationTimeOutput, setReservationTimeOutput] = useState("");
-  const [reservationTimeSaved, setReservationTimeSaved] = useState("");
-  const [numOfPeople, setNumOfPeople] = useState("");
-  const [name, setName] = useState("");
-  const [phoneNum, setPhoneNum] = useState("");
-  const [notes, setNotes] = useState("");
+    const [reservationTimeOutput, setReservationTimeOutput] = useState("");
+    const [reservationTimeSaved, setReservationTimeSaved] = useState("");
+    const [numOfPeople, setNumOfPeople] = useState("");
+    const [name, setName] = useState("");
+    const [phoneNum, setPhoneNum] = useState("");
+    const [notes, setNotes] = useState("");
 
-  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
-  const navigation = useNavigation();
+    const navigation = useNavigation();
 
-  // email in userInfo.data.email
-  const { reservate, updateUser, userInfo, isLoading } = useContext(AuthContext);
-  const email = userInfo.data.email;
+    // email in userInfo.data.email
+    const { reservate, updateUser, userInfo, isLoading } =
+        useContext(AuthContext);
+    const email = userInfo.data.email;
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
-  };
+    useEffect(() => {
+        if (userInfo.data.name !== null) {
+            setName(userInfo.data.name);
+        }
+        if (userInfo.data.phone_num !== null) {
+            setPhoneNum(userInfo.data.phone_num);
+        }
+    }, [userInfo.data]);
 
-  const hideDatePicker = () => {
-    setDatePickerVisibility(false);
-  };
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
 
-  const handleConfirm = (datetime) => {
-    const currentDateTime = moment();
-    const selectedDateTime = moment(datetime);
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
 
-    const timeDifference = selectedDateTime.diff(currentDateTime, 'minutes');
+    const handleConfirm = (datetime) => {
+        const currentDateTime = moment();
+        const selectedDateTime = moment(datetime);
 
-    if(timeDifference < 29) {
-      alert('Please make a reservation at least 30 minutes in advance');
-      hideDatePicker();
-    } else {
-      setReservationTimeOutput(moment(datetime).format('MMMM, Do YYYY HH:mm'));
-      setReservationTimeSaved(moment(datetime).format('YYYYMMDDHHmmss'));
-      hideDatePicker();
-    }
-  };
+        const timeDifference = selectedDateTime.diff(
+            currentDateTime,
+            "minutes"
+        );
 
-  const handleSubmitPress = async () => {
-    try {
-      if(isValidReservation(reservationTimeOutput, numOfPeople, name, phoneNum) == false) {
-        console.log("Not valid");
-        return;
-      }
-      
-      const updatedNotes = notes.length === 0 ? "No Notes" : notes;
-      
-      await reservate(reservationTimeSaved, numOfPeople, updatedNotes, email);
-      await updateUser(name, phoneNum, email);
-      navigation.navigate('Success');
-      return;
-    } catch (error) {
-      console.log("Error:", error);
-    }
-  }
+        if (timeDifference < 29) {
+            alert("Please make a reservation at least 30 minutes in advance");
+            hideDatePicker();
+        } else {
+            setReservationTimeOutput(
+                moment(datetime).format("MMMM, Do YYYY HH:mm")
+            );
+            setReservationTimeSaved(moment(datetime).format("YYYYMMDDHHmmss"));
+            hideDatePicker();
+        }
+    };
 
-  return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 20}
-    >
-      <Spinner visible={isLoading} />
-      <ScrollView contentContainerStyle={styles.contentContainer}>
-        <Text style={styles.title}>Reservation Screen</Text>
+    const handleSubmitPress = async () => {
+        try {
+            // if (
+            //     isValidReservation(
+            //         reservationTimeOutput,
+            //         numOfPeople,
+            //         name,
+            //         phoneNum
+            //     ) == false
+            // ) {
+            //     console.log("Not valid");
+            //     return;
+            // }
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Reservation Time <Text style={{color: 'red'}}>*</Text></Text>
-          <TouchableOpacity onPress={showDatePicker}>
-            <Text style={styles.input}>{reservationTimeOutput ? reservationTimeOutput.toString() : "Enter reservation time"}</Text>
-          </TouchableOpacity>
-          <DateTimePickerModal 
-            isVisible={isDatePickerVisible}
-            mode="datetime"
-            minimumDate={new Date()}
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-            is24Hour={true}
-          />
-        </View>
+            const updatedNotes = notes.length === 0 ? "No Notes" : notes;
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Number of People <Text style={{color: 'red'}}>*</Text></Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="2"
-            value={numOfPeople}
-            onChangeText={(numOfPeople) => setNumOfPeople(numOfPeople)}
-            selectTextOnFocus={false}
-            keyboardType="numeric" 
-          />
-        </View>
+            //reservationTimeSaved
+            await reservate("20230704000000", numOfPeople, updatedNotes, email);
+            await updateUser(name, phoneNum, email);
+            navigation.navigate("Table Reservation Information");
+            return;
+        } catch (error) {
+            console.log("Error:", error);
+        }
+    };
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Name <Text style={{color: 'red'}}>*</Text></Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="Nguyen Van A"
-            value={name}
-            onChangeText={(name) => setName(name)}
-            selectTextOnFocus={false}
-          />
-        </View>
+    return (
+        <KeyboardAvoidingView
+            style={styles.container}
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
+        >
+            <Spinner visible={isLoading} />
+            <ScrollView contentContainerStyle={styles.contentContainer}>
+                <Text style={styles.title}>Reservation Screen</Text>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Phone Number <Text style={{color: 'red'}}>*</Text></Text>
-          <TextInput 
-            style={styles.input} 
-            placeholder="0123456789" 
-            keyboardType="phone-pad" 
-            value={phoneNum}
-            onChangeText={(phoneNum) => setPhoneNum(phoneNum)}
-            selectTextOnFocus={false}
-          />
-        </View>
+                <FormGroupInput labelText="Reservation Time" hasStar={true}>
+                    <TouchableOpacity onPress={showDatePicker}>
+                        <Text style={styles.input}>
+                            {reservationTimeOutput
+                                ? reservationTimeOutput.toString()
+                                : "Enter reservation time"}
+                        </Text>
+                    </TouchableOpacity>
+                    <DateTimePickerModal
+                        isVisible={isDatePickerVisible}
+                        mode="datetime"
+                        minimumDate={new Date()}
+                        onConfirm={handleConfirm}
+                        onCancel={hideDatePicker}
+                        is24Hour={true}
+                    />
+                </FormGroupInput>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email <Text style={{color: 'red'}}>*</Text></Text>
-          <TextInput 
-            style={styles.input} 
-            keyboardType="email-address" 
-            value={email}
-            selectTextOnFocus={false}
-          />
-        </View>
+                <FormGroupInput labelText="Number of People" hasStar={true}>
+                    <MyInput
+                        placeholder="2"
+                        value={numOfPeople}
+                        onChangeText={(numOfPeople) =>
+                            setNumOfPeople(numOfPeople)
+                        }
+                        selectTextOnFocus={false}
+                        keyboardType="numeric"
+                    />
+                </FormGroupInput>
 
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Notes (Additional)</Text>
-          <TextInput 
-            style={[styles.input, styles.notesInput]} 
-            placeholder="Enter any additional notes" multiline={true} 
-            value={notes}
-            onChangeText={(notes) => setNotes(notes)}
-            selectTextOnFocus={false}
-          />
-        </View>
+                <FormGroupInput labelText="Name" hasStar={true}>
+                    <MyInput
+                        placeholder="Nguyen Van A"
+                        value={name}
+                        onChangeText={(name) => setName(name)}
+                        selectTextOnFocus={false}
+                    />
+                </FormGroupInput>
 
-        <TouchableOpacity style={styles.submitButton} onPress={handleSubmitPress}>
-          <Text style={styles.submitButtonText}>Submit</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    </KeyboardAvoidingView>
-    
-  );
+                <FormGroupInput labelText="Phone Number" hasStar={true}>
+                    <MyInput
+                        placeholder="0123456789"
+                        value={phoneNum}
+                        onChangeText={(phoneNum) => setPhoneNum(phoneNum)}
+                        selectTextOnFocus={false}
+                        keyboardType="phone-pad"
+                    />
+                </FormGroupInput>
+
+                <FormGroupInput labelText="Email" hasStar={true}>
+                    <MyInput
+                        value={email}
+                        selectTextOnFocus={false}
+                        keyboardType="email-address"
+                        editable={false}
+                    />
+                </FormGroupInput>
+
+                <FormGroupInput labelText="Notes (Additional)">
+                    <MyInput
+                        placeholder="Enter any additional notes"
+                        value={notes}
+                        onChangeText={(notes) => setNotes(notes)}
+                        selectTextOnFocus={false}
+                        multiline={true}
+                        notesStyle={true}
+                    />
+                </FormGroupInput>
+
+                <MyButton text="Submit" handlePress={handleSubmitPress} />
+            </ScrollView>
+        </KeyboardAvoidingView>
+    );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  contentContainer: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
-  },
-  inputContainer: {
-    marginBottom: 16,
-    width: '100%',
-  },
-  label: {
-    fontSize: 16,
-    marginBottom: 8,
-  },
-  input: {
-    borderWidth: 1,
-    borderColor: '#ccc',
-    borderRadius: 4,
-    padding: 8,
-    width: '100%',
-  },
-  notesInput: {
-    height: 80,
-  },
-  submitButton: {
-    width: '100%',
-    height: 40,
-    backgroundColor: 'blue',
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  submitButtonText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+    container: {
+        flex: 1,
+        backgroundColor: "#fff",
+    },
+    contentContainer: {
+        flexGrow: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        padding: 16,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: "bold",
+        marginBottom: 24,
+        marginTop: 40,
+    },
+    input: {
+        width: "100%",
+        height: 40,
+        borderWidth: 1,
+        borderColor: "#ccc",
+        borderRadius: 8,
+        marginBottom: 16,
+        padding: 10,
+    },
 });
 
 export default ReservationScreen;
