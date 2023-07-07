@@ -20,7 +20,7 @@ const NotificationScreen = () => {
         {
             id: 2,
             title: "Sales",
-            content: "khuyen mai rat nhieu tien",
+            content: "Deo khuyen mai",
             datetime: "04/07/2023 - 13:00",
         },
         {
