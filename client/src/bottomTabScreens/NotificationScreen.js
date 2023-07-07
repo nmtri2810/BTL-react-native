@@ -26,7 +26,7 @@ const NotificationScreen = () => {
         {
             id: 3,
             title: "Sales",
-            content: "khuyen mai rat nhieu tien",
+            content: "deo co tien",
             datetime: "04/07/2023 - 13:00",
         },
         {
