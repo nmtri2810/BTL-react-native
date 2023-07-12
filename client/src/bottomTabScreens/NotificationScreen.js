@@ -8,89 +8,51 @@ import {
 } from "react-native";
 import Card from "../components/Card";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { notiItems } from "../data/notiItems";
+import Title from "../components/Title";
 
 const NotificationScreen = () => {
-    const notiItems = [
-        {
-            id: 1,
-            title: "Sales",
-            content: "khuyen mai rat nhieu tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 2,
-            title: "Sales",
-            content: "Deo khuyen mai",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 3,
-            title: "Sales",
-            content: "deo co tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 4,
-            title: "Sales",
-            content: "khuyen mai rat nhieu tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 5,
-            title: "Sales",
-            content: "khuyen mai rat nhieu tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 6,
-            title: "Sales",
-            content: "khuyen mai rat nhieu tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 7,
-            title: "Sales",
-            content: "khuyen mai rat nhieu tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-        {
-            id: 8,
-            title: "Sales",
-            content: "khuyen mai rat nhieu tien",
-            datetime: "04/07/2023 - 13:00",
-        },
-    ];
-
     const handleNotiPress = (id) => {
         console.log(id);
     };
 
     const renderNotiItems = ({ item }) => (
-        <Card>
-            <TouchableOpacity
-                style={styles.notiItem}
-                onPress={() => handleNotiPress(item.id)}
-            >
-                <View style={styles.title}>
-                    <Text style={styles.titleHeader}>{item.title}</Text>
-                    <MaterialCommunityIcons
-                        name="dots-horizontal"
-                        color="black"
-                        size={26}
-                    />
-                </View>
-                <Text style={styles.content}>{item.content}</Text>
-                <Text style={styles.datetime}>{item.datetime}</Text>
-            </TouchableOpacity>
-        </Card>
+        <View style={styles.cardContainer}>
+            <Card shadow={true}>
+                <TouchableOpacity
+                    style={styles.notiItem}
+                    onPress={() => handleNotiPress(item.id)}
+                >
+                    <View style={styles.title}>
+                        <View style={styles.titleContainer}>
+                            <MaterialCommunityIcons
+                                name={item.icon}
+                                color={item.iconColor}
+                                size={24}
+                                style={styles.notificationIcon}
+                            />
+                            <Text style={styles.titleHeader}>{item.title}</Text>
+                        </View>
+                        <MaterialCommunityIcons
+                            name="dots-horizontal"
+                            color="black"
+                            size={26}
+                        />
+                    </View>
+                    <Text style={styles.content}>{item.content}</Text>
+                    <Text style={styles.datetime}>{item.datetime}</Text>
+                </TouchableOpacity>
+            </Card>
+        </View>
     );
 
     return (
         <View style={styles.container}>
+            <Title title="Notification" />
             <FlatList
                 data={notiItems}
                 renderItem={renderNotiItems}
-                keyExtractor={(item) => item.id}
+                keyExtractor={(item) => item.id.toString()}
                 style={styles.notiList}
             />
         </View>
@@ -102,20 +64,39 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 16,
         backgroundColor: "#fff",
+        paddingTop: 16,
     },
     notiList: {
         width: "100%",
+        flex: 1,
+    },
+    cardContainer: {
+        padding: 10,
     },
     notiItem: {
-        borderBottomWidth: 1,
-        borderBottomColor: "#eee",
+        padding: 10,
     },
     title: {
         flexDirection: "row",
         justifyContent: "space-between",
         alignItems: "center",
+    },
+    titleContainer: {
+        flexDirection: "row",
+    },
+    titleHeader: {
+        fontSize: 16,
+        fontWeight: "bold",
+        marginLeft: 8,
+    },
+    content: {
+        fontSize: 16,
+        marginBottom: 8,
+    },
+    datetime: {
+        fontSize: 14,
+        color: "gray",
     },
 });
 

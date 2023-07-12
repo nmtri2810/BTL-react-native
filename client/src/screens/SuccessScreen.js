@@ -1,20 +1,16 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { AuthContext } from "../context/AuthContext";
+import { Context } from "../context/Context";
 import moment from "moment";
 import FormGroupOutput from "../components/FormGroupOutput";
 import Card from "../components/Card";
 
 const SuccessScreen = () => {
-    const { reservationInfo, userInfo } = useContext(AuthContext);
-
-    const reservationTime = moment(
-        reservationInfo.data.reservation_time
-    ).format("MMMM, Do YYYY HH:mm");
+    const { reservationInfo, userInfo } = useContext(Context);
 
     return (
         <View style={styles.container}>
-            <Card isCenter={true} shadow={true}>
+            <Card isCenter={true} shadow={true} marginBottom={true}>
                 <Image
                     style={styles.successLogo}
                     source={{
@@ -31,7 +27,9 @@ const SuccessScreen = () => {
                 />
                 <FormGroupOutput
                     label="Reservation time"
-                    data={reservationTime}
+                    data={moment(reservationInfo.data.reservation_time).format(
+                        "MMMM, Do YYYY HH:mm"
+                    )}
                 />
                 <FormGroupOutput
                     label="Number of people"

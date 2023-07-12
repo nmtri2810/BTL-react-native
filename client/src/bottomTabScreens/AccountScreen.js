@@ -7,17 +7,23 @@ import {
     Image,
     FlatList,
 } from "react-native";
-import { AuthContext } from "../context/AuthContext";
+import { Context } from "../context/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import MyButton from "../components/MyButton";
 import Card from "../components/Card";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
+import { accountItems } from "../data/accountItems";
 
 const AccountScreen = () => {
-    const { logout, userInfo, isLoading } = useContext(AuthContext);
+    const { logout, userInfo, isLoading } = useContext(Context);
 
-    const handleAccountItemPress = (key) => {
-        console.log(key);
+    const navigation = useNavigation();
+    const handleAccountItemPress = (id) => {
+        if (id == 4) {
+            navigation.navigate("Reservation History");
+        } else {
+            console.log(id);
+        }
     };
 
     const handleLogoutPress = () => {
@@ -25,107 +31,18 @@ const AccountScreen = () => {
         logout();
     };
 
-    const accountItems = [
-        {
-            key: "1",
-            title: "Personal Information",
-            icon: (
-                <MaterialCommunityIcons
-                    name="account-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "2",
-            title: "Preferential",
-            icon: (
-                <MaterialCommunityIcons
-                    name="gift-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "3",
-            title: "Transaction History",
-            icon: (
-                <MaterialCommunityIcons
-                    name="credit-card-clock-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "4",
-            title: "Table Reservation History",
-            icon: (
-                <MaterialCommunityIcons
-                    name="clipboard-text-clock-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "5",
-            title: "Terms of Use",
-            icon: (
-                <MaterialCommunityIcons
-                    name="file-document-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "6",
-            title: "Settings",
-            icon: (
-                <MaterialCommunityIcons
-                    name="cog-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "7",
-            title: "About Us",
-            icon: (
-                <MaterialCommunityIcons
-                    name="information-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-        {
-            key: "8",
-            title: "Support",
-            icon: (
-                <MaterialCommunityIcons
-                    name="phone-check-outline"
-                    color="black"
-                    size={26}
-                />
-            ),
-        },
-    ];
-
     const renderAccountItem = ({ item }) => (
-        <Card>
-            <TouchableOpacity
-                style={styles.accountItem}
-                onPress={() => handleAccountItemPress(item.key)}
-            >
-                {item.icon}
-                <Text style={styles.accountItemText}>{item.title}</Text>
-            </TouchableOpacity>
-        </Card>
+        <View style={styles.cardContainer}>
+            <Card>
+                <TouchableOpacity
+                    style={styles.accountItem}
+                    onPress={() => handleAccountItemPress(item.id)}
+                >
+                    {item.icon}
+                    <Text style={styles.accountItemText}>{item.title}</Text>
+                </TouchableOpacity>
+            </Card>
+        </View>
     );
 
     return (
@@ -145,7 +62,7 @@ const AccountScreen = () => {
             <FlatList
                 data={accountItems}
                 renderItem={renderAccountItem}
-                keyExtractor={(item) => item.key}
+                keyExtractor={(item) => item.id.toString()}
                 style={styles.accountList}
             />
 
@@ -163,8 +80,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 16,
         backgroundColor: "#fff",
+        padding: 16,
     },
     header: {
         alignItems: "center",
@@ -183,6 +100,9 @@ const styles = StyleSheet.create({
     },
     accountList: {
         width: "100%",
+    },
+    cardContainer: {
+        paddingVertical: 8,
     },
     accountItem: {
         flexDirection: "row",

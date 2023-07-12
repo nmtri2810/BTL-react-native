@@ -1,13 +1,14 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 
-const Card = ({ children, isCenter, shadow }) => {
+const Card = ({ children, isCenter, shadow, marginBottom }) => {
     return (
         <View
             style={[
                 styles.card,
                 isCenter && styles.center,
                 shadow && styles.cardShadow,
+                marginBottom && styles.marginBottom,
             ]}
         >
             {children}
@@ -20,13 +21,12 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: 10,
         padding: 10,
-        marginBottom: 10,
     },
     cardShadow: {
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
-            height: 2,
+            height: 1,
         },
         shadowOpacity: 0.25,
         shadowRadius: 3.84,
@@ -34,6 +34,9 @@ const styles = StyleSheet.create({
     },
     center: {
         alignItems: "center",
+    },
+    marginBottom: {
+        marginBottom: 10,
     },
 });
 

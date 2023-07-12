@@ -1,18 +1,19 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { AuthContext } from "../context/AuthContext";
+import { Context } from "../context/Context";
 import { useContext } from "react";
 
 import LoginScreen from "../screens/LoginScreen";
 import RegisterScreen from "../screens/RegisterScreen";
 import BottomTabNavigation from "./BottomTabNavigation";
 import SuccessScreen from "../screens/SuccessScreen";
+import ReservationHistoryScreen from "../screens/ReservationHistoryScreen";
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-    const { userInfo } = useContext(AuthContext);
+    const { userInfo } = useContext(Context);
 
     return (
         <NavigationContainer>
@@ -43,6 +44,10 @@ const Navigation = () => {
                         />
                     </>
                 )}
+                <Stack.Screen
+                    name="Reservation History"
+                    component={ReservationHistoryScreen}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     );

@@ -6,16 +6,18 @@ import {
     ScrollView,
     KeyboardAvoidingView,
     Platform,
+    View,
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
 import { isValidReservation } from "../utilities/Validation";
-import { AuthContext } from "../context/AuthContext";
+import { Context } from "../context/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useNavigation } from "@react-navigation/native";
 import MyButton from "../components/MyButton";
 import FormGroupInput from "../components/FormGroupInput";
 import MyInput from "../components/MyInput";
+import Title from "../components/Title";
 
 const ReservationScreen = () => {
     const [reservationTimeOutput, setReservationTimeOutput] = useState("");
@@ -30,8 +32,7 @@ const ReservationScreen = () => {
     const navigation = useNavigation();
 
     // email in userInfo.data.email
-    const { reservate, updateUser, userInfo, isLoading } =
-        useContext(AuthContext);
+    const { reservate, updateUser, userInfo, isLoading } = useContext(Context);
     const email = userInfo.data.email;
 
     useEffect(() => {
@@ -74,22 +75,27 @@ const ReservationScreen = () => {
 
     const handleSubmitPress = async () => {
         try {
-            // if (
-            //     isValidReservation(
-            //         reservationTimeOutput,
-            //         numOfPeople,
-            //         name,
-            //         phoneNum
-            //     ) == false
-            // ) {
-            //     console.log("Not valid");
-            //     return;
-            // }
+            if (
+                isValidReservation(
+                    reservationTimeOutput,
+                    numOfPeople,
+                    name,
+                    phoneNum
+                ) == false
+            ) {
+                console.log("Not valid");
+                return;
+            }
 
             const updatedNotes = notes.length === 0 ? "No Notes" : notes;
 
             //reservationTimeSaved
-            await reservate("20230704000000", numOfPeople, updatedNotes, email);
+            await reservate(
+                reservationTimeSaved,
+                numOfPeople,
+                updatedNotes,
+                email
+            );
             await updateUser(name, phoneNum, email);
             navigation.navigate("Table Reservation Information");
             return;
@@ -106,7 +112,7 @@ const ReservationScreen = () => {
         >
             <Spinner visible={isLoading} />
             <ScrollView contentContainerStyle={styles.contentContainer}>
-                <Text style={styles.title}>Reservation Screen</Text>
+                <Title title="Reservation" />
 
                 <FormGroupInput labelText="Reservation Time" hasStar={true}>
                     <TouchableOpacity onPress={showDatePicker}>
@@ -177,6 +183,8 @@ const ReservationScreen = () => {
                     />
                 </FormGroupInput>
 
+                <View style={{ marginBottom: 60 }} />
+
                 <MyButton text="Submit" handlePress={handleSubmitPress} />
             </ScrollView>
         </KeyboardAvoidingView>
@@ -189,16 +197,10 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
     },
     contentContainer: {
-        flexGrow: 1,
         justifyContent: "center",
         alignItems: "center",
-        padding: 16,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: "bold",
-        marginBottom: 24,
-        marginTop: 40,
+        paddingHorizontal: 16,
+        paddingTop: 16,
     },
     input: {
         width: "100%",

@@ -26,7 +26,17 @@ const BottomTabNavigation = ({ navigation }) => {
             initialRouteName="Home"
             activeColor="#eab849"
             shifting={true}
-            barStyle={{ backgroundColor: "grey" }}
+            barStyle={{
+                backgroundColor: "#fff",
+                shadowOffset: {
+                    width: 0,
+                    height: 9,
+                },
+                shadowOpacity: 0.8,
+                shadowRadius: 16.0,
+                elevation: 24,
+                shadowColor: "#000",
+            }}
         >
             <Tab.Screen
                 name="Home"

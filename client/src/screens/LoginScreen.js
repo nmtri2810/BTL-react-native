@@ -8,7 +8,7 @@ import {
     Platform,
 } from "react-native";
 import { isValidEmail, isValidPassword } from "../utilities/Validation";
-import { AuthContext } from "../context/AuthContext";
+import { Context } from "../context/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
@@ -17,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const { checkUserExist, login, isLoading } = useContext(AuthContext);
+    const { checkUserExist, login, isLoading } = useContext(Context);
 
     const handleLoginPress = () => {
         if (isValidEmail(email) == false) {

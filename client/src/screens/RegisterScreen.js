@@ -9,7 +9,7 @@ import {
     Platform,
 } from "react-native";
 import { isValidEmail, isValidPassword } from "../utilities/Validation";
-import { AuthContext } from "../context/AuthContext";
+import { Context } from "../context/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
@@ -19,7 +19,7 @@ const RegisterScreen = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
 
-    const { checkUserExist, register, isLoading } = useContext(AuthContext);
+    const { checkUserExist, register, isLoading } = useContext(Context);
 
     const handleRegisterPress = () => {
         if (isValidEmail(email) == false) {
