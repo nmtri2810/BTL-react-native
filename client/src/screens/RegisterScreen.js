@@ -19,7 +19,7 @@ const RegisterScreen = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [rePassword, setRePassword] = useState("");
 
-    const { checkUserExist, register, isLoading } = useContext(Context);
+    const { register, isLoading } = useContext(Context);
 
     const handleRegisterPress = () => {
         if (isValidEmail(email) == false) {
@@ -33,26 +33,13 @@ const RegisterScreen = ({ navigation }) => {
         if (rePassword.length == 0) {
             alert("Please confirm password");
             return;
-        } else if (password != rePassword) {
+        }
+        if (password != rePassword) {
             alert("Passwords do not match");
             return;
         }
 
-        checkUserExist(email)
-            .then((exists) => {
-                if (exists) {
-                    alert("Email already exists");
-                    return;
-                } else {
-                    console.log("login");
-                    register(email, password);
-                    return;
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-                alert("An error occurred while checking email existence");
-            });
+        register(email, password);
     };
 
     const handleLoginPress = () => {

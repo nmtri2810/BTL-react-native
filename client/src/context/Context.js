@@ -13,34 +13,6 @@ export const AuthProvider = ({ children }) => {
 
     //note: localhost ip changed!
 
-    const checkUserExist = (email) => {
-        setIsLoading(true);
-
-        return new Promise((resolve, reject) => {
-            axios
-                .get(`${BASE_URL}/users/${email}`)
-                .then((res) => {
-                    let userInfo = res.data;
-                    if (
-                        userInfo.data &&
-                        userInfo.data.email.toLowerCase() ===
-                            email.toLowerCase()
-                    ) {
-                        setIsLoading(false);
-                        resolve(true);
-                    } else {
-                        setIsLoading(false);
-                        resolve(false);
-                    }
-                })
-                .catch((e) => {
-                    setIsLoading(false);
-                    console.log(`check error ${e}`);
-                    reject(e);
-                });
-        });
-    };
-
     const register = (email, password) => {
         setIsLoading(true);
 
@@ -56,6 +28,9 @@ export const AuthProvider = ({ children }) => {
                 setIsLoading(false);
             })
             .catch((e) => {
+                if (e.response && e.response.status === 403) {
+                    alert("User already exists");
+                }
                 console.log(`register error ${e}`);
                 setIsLoading(false);
             });
@@ -64,33 +39,28 @@ export const AuthProvider = ({ children }) => {
     const login = (email, password) => {
         setIsLoading(true);
 
-        return new Promise((resolve, reject) => {
-            axios
-                .post(`${BASE_URL}/login`, {
-                    email,
-                    password,
-                })
-                .then((res) => {
-                    let userInfo = res.data;
-                    if (Object.keys(userInfo).length === 0) {
-                        resolve(false);
-                        setIsLoading(false);
-                    } else {
-                        resolve(true);
-                        setUserInfo(userInfo);
-                        AsyncStorage.setItem(
-                            "userInfo",
-                            JSON.stringify(userInfo)
-                        );
-                        setIsLoading(false);
+        axios
+            .post(`${BASE_URL}/login`, {
+                email,
+                password,
+            })
+            .then((res) => {
+                let userInfo = res.data;
+                setUserInfo(userInfo);
+                AsyncStorage.setItem("userInfo", JSON.stringify(userInfo));
+                setIsLoading(false);
+            })
+            .catch((e) => {
+                if (e.response && e.response.status === 401) {
+                    if (e.response.data.message === "Wrong password") {
+                        alert("Wrong password");
+                    } else if (e.response.data.message === "User not exist") {
+                        alert("User not exist");
                     }
-                })
-                .catch((e) => {
-                    console.log(`login error ${e}`);
-                    reject(e);
-                    setIsLoading(false);
-                });
-        });
+                }
+                console.log(`login error ${e}`);
+                setIsLoading(false);
+            });
     };
 
     const logout = () => {
@@ -161,25 +131,20 @@ export const AuthProvider = ({ children }) => {
     };
 
     const reservationHistory = (email) => {
-        return new Promise((resolve, reject) => {
-            axios
-                .get(`${BASE_URL}/reservation/${email}`)
-                .then((res) => {
-                    let reservationHistoryInfo = res.data;
-                    setReservationHistoryInfo(reservationHistoryInfo);
-                    resolve(true);
-                })
-                .catch((e) => {
-                    console.log(`reservation history error ${e}`);
-                    reject(e);
-                });
-        });
+        axios
+            .get(`${BASE_URL}/reservation/${email}`)
+            .then((res) => {
+                let reservationHistoryInfo = res.data;
+                setReservationHistoryInfo(reservationHistoryInfo);
+            })
+            .catch((e) => {
+                console.log(`reservation history error ${e}`);
+            });
     };
 
     return (
         <Context.Provider
             value={{
-                checkUserExist,
                 register,
                 login,
                 logout,

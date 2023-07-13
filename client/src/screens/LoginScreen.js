@@ -17,7 +17,7 @@ const LoginScreen = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const { checkUserExist, login, isLoading } = useContext(Context);
+    const { login, isLoading } = useContext(Context);
 
     const handleLoginPress = () => {
         if (isValidEmail(email) == false) {
@@ -29,34 +29,7 @@ const LoginScreen = ({ navigation }) => {
             return;
         }
 
-        checkUserExist(email)
-            .then((exists) => {
-                if (exists) {
-                    login(email, password)
-                        .then((checkPassword) => {
-                            if (checkPassword) {
-                                console.log("login");
-                                return;
-                            } else {
-                                alert("Email or password is incorrect");
-                                return;
-                            }
-                        })
-                        .catch((e) => {
-                            console.log(e);
-                            alert(
-                                "An error occurred while checking email login"
-                            );
-                        });
-                } else {
-                    alert("Email or password is incorrect");
-                    return;
-                }
-            })
-            .catch((e) => {
-                console.log(e);
-                alert("An error occurred while checking email existence");
-            });
+        login(email, password);
     };
 
     const handleForgotPasswordPress = () => {

@@ -1,4 +1,5 @@
 import pool from "../configs/connectDB.js";
+import bcrypt from "bcrypt";
 
 let getAllUser = async (req, res) => {
     const [rows, fields] = await pool.execute("SELECT * FROM user");
@@ -20,6 +21,7 @@ let getAllReservation = async (req, res) => {
 
 let getUser = async (req, res) => {
     let email = req.params.email;
+
     const [rows, fields] = await pool.execute(
         "SELECT * FROM user where email = ?",
         [email]
@@ -46,50 +48,77 @@ let register = async (req, res) => {
     let { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(200).json({
-            message: "missing required params",
+        return res.status(400).json({
+            message: "Missing required params",
         });
     }
 
-    await pool.execute("INSERT INTO user(email, password) VALUES (?, ?)", [
-        email,
-        password,
-    ]);
-
-    const [rows, fields] = await pool.execute(
+    let [rows, fields] = await pool.execute(
         "SELECT * FROM user where email = ?",
         [email]
     );
 
-    return res.status(200).json({
-        data: rows[0],
-    });
+    const user = rows[0];
+    if (!user) {
+        const hash = await bcrypt.hash(password, 13);
+        await pool.execute("INSERT INTO user(email, password) VALUES (?, ?)", [
+            email,
+            hash,
+        ]);
+
+        [rows, fields] = await pool.execute(
+            "SELECT * FROM user where email = ?",
+            [email]
+        );
+
+        return res.status(200).json({
+            data: rows[0],
+        });
+    } else {
+        return res.status(403).json({
+            message: "User already exists",
+        });
+    }
 };
 
 let login = async (req, res) => {
     let { email, password } = req.body;
 
     if (!email || !password) {
-        return res.status(200).json({
+        return res.status(400).json({
             message: "missing required params",
         });
     }
 
     const [rows, fields] = await pool.execute(
-        "SELECT * FROM user where email = ? and password = ?",
-        [email, password]
+        "SELECT * FROM user where email = ?",
+        [email]
     );
 
-    return res.status(200).json({
-        data: rows[0],
-    });
+    const user = rows[0];
+    if (user) {
+        const isValid = await bcrypt.compare(password, user.password);
+        if (isValid) {
+            return res.status(200).json({
+                data: rows[0],
+            });
+        } else {
+            return res.status(401).json({
+                message: "Wrong password",
+            });
+        }
+    } else {
+        return res.status(401).json({
+            message: "User not exist",
+        });
+    }
 };
 
 let reservate = async (req, res) => {
     let { reservationTime, numOfPeople, notes, email } = req.body;
 
     if (!reservationTime || !numOfPeople || !notes || !email) {
-        return res.status(200).json({
+        return res.status(400).json({
             message: "missing required params",
         });
     }
@@ -113,7 +142,7 @@ let updateUser = async (req, res) => {
     let { name, phoneNum, email } = req.body;
 
     if (!name || !phoneNum || !email) {
-        return res.status(200).json({
+        return res.status(400).json({
             message: "missing required params",
         });
     }
@@ -133,22 +162,6 @@ let updateUser = async (req, res) => {
     });
 };
 
-let deleteUser = async (req, res) => {
-    let userId = req.params.id;
-
-    if (!userId) {
-        return res.status(200).json({
-            message: "missing required params",
-        });
-    }
-
-    await pool.execute("DELETE FROM user WHERE id = ?", [userId]);
-
-    return res.status(200).json({
-        message: "ok",
-    });
-};
-
 export default {
     getAllUser,
     getAllReservation,
@@ -158,5 +171,4 @@ export default {
     login,
     reservate,
     updateUser,
-    deleteUser,
 };
