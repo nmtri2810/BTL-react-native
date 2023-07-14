@@ -12,22 +12,15 @@ import { notiItems } from "../data/notiItems";
 import Title from "../components/Title";
 
 const NotificationScreen = () => {
-    const handleNotiPress = (id) => {
-        console.log(id);
-    };
-
     const renderNotiItems = ({ item }) => (
         <View style={styles.cardContainer}>
             <Card shadow={true}>
-                <TouchableOpacity
-                    style={styles.notiItem}
-                    onPress={() => handleNotiPress(item.id)}
-                >
+                <TouchableOpacity style={styles.notiItem}>
                     <View style={styles.title}>
                         <View style={styles.titleContainer}>
                             <MaterialCommunityIcons
                                 name={item.icon}
-                                color={item.iconColor}
+                                color="#eab849"
                                 size={24}
                                 style={styles.notificationIcon}
                             />
@@ -66,6 +59,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#fff",
         paddingTop: 16,
+        paddingBottom: 16,
     },
     notiList: {
         width: "100%",

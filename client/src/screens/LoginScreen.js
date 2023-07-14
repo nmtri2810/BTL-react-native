@@ -48,7 +48,7 @@ const LoginScreen = ({ navigation }) => {
         >
             <View style={styles.contentContainer}>
                 <Spinner visible={isLoading} />
-                <Text style={styles.heading}>Restaurant Reservation</Text>
+                <Text style={styles.heading}>TP Restaurant</Text>
                 <MyInput
                     placeholder="Enter email"
                     value={email}

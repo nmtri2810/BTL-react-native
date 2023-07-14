@@ -111,9 +111,8 @@ const ReservationScreen = () => {
             keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
         >
             <Spinner visible={isLoading} />
+            <Title title="Reservation" />
             <ScrollView contentContainerStyle={styles.contentContainer}>
-                <Title title="Reservation" />
-
                 <FormGroupInput labelText="Reservation Time" hasStar={true}>
                     <TouchableOpacity onPress={showDatePicker}>
                         <Text style={styles.input}>
@@ -195,12 +194,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#fff",
+        paddingTop: 16,
     },
     contentContainer: {
         justifyContent: "center",
         alignItems: "center",
         paddingHorizontal: 16,
-        paddingTop: 16,
+        paddingTop: 20,
     },
     input: {
         width: "100%",

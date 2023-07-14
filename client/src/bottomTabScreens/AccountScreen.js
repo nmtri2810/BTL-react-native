@@ -21,8 +21,6 @@ const AccountScreen = () => {
     const handleAccountItemPress = (id) => {
         if (id == 4) {
             navigation.navigate("Reservation History");
-        } else {
-            console.log(id);
         }
     };
 

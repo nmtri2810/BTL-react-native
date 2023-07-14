@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }) => {
             })
             .catch((e) => {
                 if (e.response && e.response.status === 403) {
-                    alert("User already exists");
+                    alert("Email already exists");
                 }
                 console.log(`register error ${e}`);
                 setIsLoading(false);
@@ -55,7 +55,7 @@ export const AuthProvider = ({ children }) => {
                     if (e.response.data.message === "Wrong password") {
                         alert("Wrong password");
                     } else if (e.response.data.message === "User not exist") {
-                        alert("User not exist");
+                        alert("Email not exist");
                     }
                 }
                 console.log(`login error ${e}`);

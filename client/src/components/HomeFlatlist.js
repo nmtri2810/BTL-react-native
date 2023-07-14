@@ -9,71 +9,76 @@ import {
 } from "react-native";
 import Card from "./Card";
 
-const HomeFlatlist = ({ items }) => {
-    const handlePress = (id) => {
-        console.log(id);
-    };
-
+const HomeFlatlist = ({ items, listHeaderText, numOfCol, offers }) => {
     const renderItems = ({ item }) => (
-        <Card>
-            <TouchableOpacity
-                style={styles.item}
-                onPress={() => handlePress(item.id)}
-            >
-                <Image
-                    style={styles.image}
-                    source={{
-                        uri: item.imageUrl,
-                    }}
-                />
-                <Text style={styles.title}>{item.title}</Text>
-                <View style={styles.datetimeContainer}>
-                    <Text style={styles.datetime}>{item.datetime}</Text>
-                    <TouchableOpacity style={styles.button}>
-                        <Text style={styles.buttonText}>Xem</Text>
-                    </TouchableOpacity>
-                </View>
-            </TouchableOpacity>
-        </Card>
+        <View style={numOfCol === 2 && styles.cardContainer}>
+            <Card>
+                <TouchableOpacity>
+                    <Image
+                        style={styles.image}
+                        source={{
+                            uri: item.imageUrl,
+                        }}
+                        resizeMode="cover"
+                    />
+                    <Text numberOfLines={2} style={styles.title}>
+                        {item.title}
+                    </Text>
+                    {offers === true && (
+                        <View style={styles.datetimeContainer}>
+                            <Text style={styles.datetime}>{item.datetime}</Text>
+                            <TouchableOpacity style={styles.button}>
+                                <Text style={styles.buttonText}>Details</Text>
+                            </TouchableOpacity>
+                        </View>
+                    )}
+                </TouchableOpacity>
+            </Card>
+        </View>
     );
 
     return (
-        <FlatList
-            data={items}
-            renderItem={renderItems}
-            keyExtractor={(item) => item.id}
-            style={styles.list}
-        />
+        <View>
+            <Text style={styles.listHeaderText}>{listHeaderText}</Text>
+            <FlatList
+                data={items}
+                renderItem={renderItems}
+                keyExtractor={(item) => item.id}
+                numColumns={numOfCol}
+                style={styles.list}
+            />
+        </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-        padding: 16,
-        backgroundColor: "#fff",
+    listHeaderText: {
+        fontSize: 20,
+        fontWeight: "bold",
+        marginTop: 16,
     },
     list: {
         width: "100%",
     },
-    item: {
-        width: "100%",
+    cardContainer: {
+        width: "50%",
     },
     image: {
-        width: 100,
-        height: 100,
-        borderRadius: 50,
+        width: "100%",
+        height: 150,
+        borderRadius: 15,
+        alignSelf: "center",
     },
     title: {
-        fontSize: 24,
+        fontSize: 18,
         fontWeight: "bold",
+        marginTop: 4,
     },
     datetimeContainer: {
-        width: "100%",
         flexDirection: "row",
         justifyContent: "space-between",
+        alignItems: "center",
+        marginTop: 10,
     },
     datetime: {
         fontSize: 12,
@@ -81,14 +86,17 @@ const styles = StyleSheet.create({
         color: "#999",
     },
     button: {
-        height: 50,
-        backgroundColor: "#333",
+        width: 60,
+        height: 30,
+        backgroundColor: "#eab849",
         justifyContent: "center",
         alignItems: "center",
+        borderRadius: 10,
     },
     buttonText: {
-        color: "#fff",
+        color: "#000",
         fontWeight: "bold",
+        fontSize: 12,
     },
 });
 
