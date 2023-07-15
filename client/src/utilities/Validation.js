@@ -24,7 +24,7 @@ export const isValidReservation = (
         );
         return false;
     }
-    if (/^[A-Za-z\s]*$/.test(name) == false || name.length > 30) {
+    if (name.length > 40) {
         alert("Please enter the correct name");
         return false;
     }

@@ -46,6 +46,7 @@ const HomeFlatlist = ({ items, listHeaderText, numOfCol, offers }) => {
                 keyExtractor={(item) => item.id}
                 numColumns={numOfCol}
                 style={styles.list}
+                scrollEnabled={false}
             />
         </View>
     );
