@@ -1,6 +1,6 @@
 {
     "type": "module",
-    "name": "basic",
+    "name": "server",
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
@@ -17,12 +17,12 @@
         "dotenv": "^16.1.4",
         "ejs": "^3.1.9",
         "express": "^4.18.2",
-        "mysql2": "^3.3.3",
-        "nodemon": "^2.0.22"
+        "mysql2": "^3.3.3"
     },
     "devDependencies": {
         "@babel/cli": "^7.21.5",
         "@babel/core": "^7.22.1",
-        "@babel/preset-env": "^7.22.4"
+        "@babel/preset-env": "^7.22.4",
+        "nodemon": "^2.0.22"
     }
 }
