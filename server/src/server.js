@@ -1,18 +1,25 @@
 import express from "express";
-import initApiRoute from "./route/api.js";
 import cors from "cors";
 import "dotenv/config";
+import bodyParser from "body-parser";
+
+import initApiRoute from "./routes/api.js";
 
 const app = express();
-const port = process.env.PORT || 3000;
 
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-app.use(cors());
+app.use(
+    cors({
+        origin: true,
+    })
+);
 
 //init api route
 initApiRoute(app);
+
+const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
     console.log(`Server listening on port ${port}`);
