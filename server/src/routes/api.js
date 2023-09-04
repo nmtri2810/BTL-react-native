@@ -1,8 +1,8 @@
 import express from "express";
 
-import userController from "../controller/userController.js";
-import authController from "../controller/authController.js";
-import reservationController from "../controller/reservationController.js";
+import userController from "../controllers/userController.js";
+import authController from "../controllers/authController.js";
+import reservationController from "../controllers/reservationController.js";
 
 let router = express.Router();
 
