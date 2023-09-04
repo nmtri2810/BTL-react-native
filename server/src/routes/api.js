@@ -19,7 +19,7 @@ const initApiRoute = (app) => {
         "/reservation/:email",
         reservationController.getReservationByEmail
     );
-    router.post("/reservate", reservationController.reservate);
+    router.post("/reserve", reservationController.reserve);
 
     return app.use("/api/", router);
 };

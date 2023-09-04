@@ -21,7 +21,7 @@ let getReservationByEmail = async (req, res) => {
     });
 };
 
-let reservate = async (req, res) => {
+let reserve = async (req, res) => {
     let { reservationTime, numOfPeople, notes, email } = req.body;
 
     if (!reservationTime || !numOfPeople || !notes || !email) {
@@ -48,5 +48,5 @@ let reservate = async (req, res) => {
 export default {
     getAllReservation,
     getReservationByEmail,
-    reservate,
+    reserve,
 };

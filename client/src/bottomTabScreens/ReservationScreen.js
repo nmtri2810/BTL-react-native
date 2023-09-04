@@ -75,27 +75,22 @@ const ReservationScreen = () => {
 
     const handleSubmitPress = async () => {
         try {
-            if (
-                isValidReservation(
-                    reservationTimeOutput,
-                    numOfPeople,
-                    name,
-                    phoneNum
-                ) == false
-            ) {
-                console.log("Not valid");
-                return;
-            }
+            // if (
+            //     isValidReservation(
+            //         reservationTimeOutput,
+            //         numOfPeople,
+            //         name,
+            //         phoneNum
+            //     ) == false
+            // ) {
+            //     console.log("Not valid");
+            //     return;
+            // }
 
             const updatedNotes = notes.length === 0 ? "No Notes" : notes;
 
             //reservationTimeSaved
-            await reservate(
-                reservationTimeSaved,
-                numOfPeople,
-                updatedNotes,
-                email
-            );
+            await reservate("20230101000000", numOfPeople, updatedNotes, email);
             await updateUser(name, phoneNum, email);
             navigation.navigate("Table Reservation Information");
             return;

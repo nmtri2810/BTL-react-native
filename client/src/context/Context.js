@@ -81,7 +81,7 @@ export const AuthProvider = ({ children }) => {
 
         return new Promise((resolve, reject) => {
             axios
-                .post(`${BASE_URL}/reservate`, {
+                .post(`${BASE_URL}/reserve`, {
                     reservationTime,
                     numOfPeople,
                     notes,
