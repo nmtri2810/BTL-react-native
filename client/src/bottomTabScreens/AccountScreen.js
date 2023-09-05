@@ -7,7 +7,7 @@ import {
     Image,
     FlatList,
 } from "react-native";
-import { Context } from "../context/Context";
+import Context from "../store/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import MyButton from "../components/MyButton";
 import Card from "../components/Card";

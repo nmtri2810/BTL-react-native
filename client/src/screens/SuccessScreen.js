@@ -1,12 +1,14 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import { Context } from "../context/Context";
+import Context from "../store/Context";
 import moment from "moment";
 import FormGroupOutput from "../components/FormGroupOutput";
 import Card from "../components/Card";
+import { useRoute } from "@react-navigation/native";
 
 const SuccessScreen = () => {
-    const { reservationInfo, userInfo } = useContext(Context);
+    const route = useRoute();
+    const { reservationInfo, userInfo } = route.params;
 
     return (
         <View style={styles.container}>

@@ -8,8 +8,8 @@ import {
     KeyboardAvoidingView,
     Platform,
 } from "react-native";
-import { isValidEmail, isValidPassword } from "../utilities/Validation";
-import { Context } from "../context/Context";
+import { isValidEmail, isValidPassword } from "../utilities/validation";
+import Context from "../store/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import MyButton from "../components/MyButton";
 import MyInput from "../components/MyInput";
@@ -21,7 +21,7 @@ const RegisterScreen = ({ navigation }) => {
 
     const { register, isLoading } = useContext(Context);
 
-    const handleRegisterPress = () => {
+    const handleRegisterPress = async () => {
         if (isValidEmail(email) == false) {
             alert("Email not in correct format");
             return;
@@ -39,7 +39,7 @@ const RegisterScreen = ({ navigation }) => {
             return;
         }
 
-        register(email, password);
+        await register(email, password);
     };
 
     const handleLoginPress = () => {

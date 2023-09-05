@@ -10,14 +10,16 @@ import {
 } from "react-native";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import moment from "moment";
-import { isValidReservation } from "../utilities/Validation";
-import { Context } from "../context/Context";
+import { isValidReservation } from "../utilities/validation";
+import Context from "../store/Context";
 import Spinner from "react-native-loading-spinner-overlay";
 import { useNavigation } from "@react-navigation/native";
 import MyButton from "../components/MyButton";
 import FormGroupInput from "../components/FormGroupInput";
 import MyInput from "../components/MyInput";
 import Title from "../components/Title";
+import { reserve } from "../services/reservationService";
+import { updateUser } from "../services/userService";
 
 const ReservationScreen = () => {
     const [reservationTimeOutput, setReservationTimeOutput] = useState("");
@@ -31,8 +33,8 @@ const ReservationScreen = () => {
 
     const navigation = useNavigation();
 
-    // email in userInfo.data.email
-    const { reservate, updateUser, userInfo, isLoading } = useContext(Context);
+    // email in userInfo.data.email reservate, updateUser,
+    const { userInfo, isLoading } = useContext(Context);
     const email = userInfo.data.email;
 
     useEffect(() => {
@@ -75,6 +77,7 @@ const ReservationScreen = () => {
 
     const handleSubmitPress = async () => {
         try {
+            // do this for npx expo run --web
             // if (
             //     isValidReservation(
             //         reservationTimeOutput,
@@ -90,9 +93,17 @@ const ReservationScreen = () => {
             const updatedNotes = notes.length === 0 ? "No Notes" : notes;
 
             //reservationTimeSaved
-            await reservate("20230101000000", numOfPeople, updatedNotes, email);
-            await updateUser(name, phoneNum, email);
-            navigation.navigate("Table Reservation Information");
+            let reserveRes = await reserve(
+                "20230604190000",
+                numOfPeople,
+                updatedNotes,
+                email
+            );
+            let userRes = await updateUser(name, phoneNum, email);
+            navigation.navigate("Table Reservation Information", {
+                reservationInfo: reserveRes.data,
+                userInfo: userRes.data,
+            });
             return;
         } catch (error) {
             console.log("Error:", error);

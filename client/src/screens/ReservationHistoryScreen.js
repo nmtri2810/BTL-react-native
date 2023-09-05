@@ -1,19 +1,30 @@
-import React, { useContext, useEffect } from "react";
-import { Context } from "../context/Context";
+import React, { useContext, useEffect, useState } from "react";
+import Context from "../store/Context";
 import { FlatList, StyleSheet, View } from "react-native";
 import Card from "../components/Card";
 import FormGroupOutput from "../components/FormGroupOutput";
 import moment from "moment";
 
+import { reservationHistory } from "../services/reservationService";
+
 const ReservationHistoryScreen = () => {
-    const { userInfo, reservationHistory, reservationHistoryInfo } =
-        useContext(Context);
+    const [reservationHistoryList, setReservationHistoryList] = useState([]);
+
+    //small bug when update user, user's profile not updated, can fix with redux or useReducer to manage state
+    const { userInfo } = useContext(Context);
 
     useEffect(() => {
-        reservationHistory(userInfo.data.email);
-    }, []);
+        async function fetchData() {
+            try {
+                let res = await reservationHistory(userInfo.data.email);
+                setReservationHistoryList(res.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        }
 
-    const reservationHistoryList = reservationHistoryInfo.data;
+        fetchData();
+    }, []);
 
     const renderReservationHistoryList = ({ item }) => (
         <View style={styles.cardContainer}>
