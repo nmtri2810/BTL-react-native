@@ -25,30 +25,30 @@ const SuccessScreen = () => {
                 <Text style={styles.detail}>Details</Text>
                 <FormGroupOutput
                     label="Reservation code"
-                    data={`#${reservationInfo.data.id}`}
+                    data={`#${reservationInfo.id}`}
                 />
                 <FormGroupOutput
                     label="Reservation time"
-                    data={moment(reservationInfo.data.reservation_time).format(
+                    data={moment(reservationInfo.reservation_time).format(
                         "MMMM, Do YYYY HH:mm"
                     )}
                 />
                 <FormGroupOutput
                     label="Number of people"
-                    data={reservationInfo.data.num_of_people}
+                    data={reservationInfo.num_of_people}
                 />
-                <FormGroupOutput label="Full name" data={userInfo.data.name} />
+                <FormGroupOutput label="Full name" data={userInfo.name} />
                 <FormGroupOutput
                     label="Phone number"
-                    data={userInfo.data.phone_num}
+                    data={userInfo.phone_num}
                 />
-                <FormGroupOutput label="Email" data={userInfo.data.email} />
+                <FormGroupOutput label="Email" data={userInfo.email} />
                 <FormGroupOutput
                     label="Notes"
                     data={
-                        reservationInfo.data.notes === "No Notes"
+                        reservationInfo.notes === "No Notes"
                             ? ""
-                            : reservationInfo.data.notes
+                            : reservationInfo.notes
                     }
                 />
             </Card>

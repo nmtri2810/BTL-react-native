@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
     View,
     Text,
@@ -13,9 +13,27 @@ import MyButton from "../components/MyButton";
 import Card from "../components/Card";
 import { useNavigation } from "@react-navigation/native";
 import { accountItems } from "../data/accountItems";
+import { getUser } from "../services/userService";
 
 const AccountScreen = () => {
     const { logout, userInfo, isLoading } = useContext(Context);
+
+    const [email, setEmail] = useState("");
+
+    useEffect(() => {
+        async function fetchData() {
+            try {
+                let res = await getUser(userInfo.user_id);
+                let user = res.data.users;
+
+                setEmail(user.email);
+            } catch (error) {
+                console.log(error);
+            }
+        }
+
+        fetchData();
+    }, []);
 
     const navigation = useNavigation();
     const handleAccountItemPress = (id) => {
@@ -54,7 +72,7 @@ const AccountScreen = () => {
                     }}
                     style={styles.userImage}
                 />
-                <Text style={styles.username}>{userInfo.data.email}</Text>
+                <Text style={styles.username}>{email}</Text>
             </View>
 
             <FlatList

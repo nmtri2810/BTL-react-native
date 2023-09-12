@@ -6,18 +6,29 @@ import FormGroupOutput from "../components/FormGroupOutput";
 import moment from "moment";
 
 import { reservationHistory } from "../services/reservationService";
+import { getUser } from "../services/userService";
 
 const ReservationHistoryScreen = () => {
     const [reservationHistoryList, setReservationHistoryList] = useState([]);
+    const [name, setName] = useState("");
+    const [phoneNum, setPhoneNum] = useState("");
+    const [email, setEmail] = useState("");
 
-    //small bug when update user, user's profile not updated, can fix with redux or useReducer to manage state
+    //small bug when update user, all of user name and phoneNum history are updated -> fix by save name and phoneNum in db
     const { userInfo } = useContext(Context);
 
     useEffect(() => {
         async function fetchData() {
             try {
-                let res = await reservationHistory(userInfo.data.email);
-                setReservationHistoryList(res.data.data);
+                let reservationRes = await reservationHistory(userInfo.user_id);
+                setReservationHistoryList(reservationRes.data.reservations);
+
+                let userRes = await getUser(userInfo.user_id);
+                let user = userRes.data.users;
+
+                setName(user.name);
+                setPhoneNum(user.phone_num);
+                setEmail(user.email);
             } catch (error) {
                 console.log(error);
             }
@@ -43,12 +54,9 @@ const ReservationHistoryScreen = () => {
                     label="Number of people"
                     data={item.num_of_people}
                 />
-                <FormGroupOutput label="Full name" data={userInfo.data.name} />
-                <FormGroupOutput
-                    label="Phone number"
-                    data={userInfo.data.phone_num}
-                />
-                <FormGroupOutput label="Email" data={userInfo.data.email} />
+                <FormGroupOutput label="Full name" data={name} />
+                <FormGroupOutput label="Phone number" data={phoneNum} />
+                <FormGroupOutput label="Email" data={email} />
                 <FormGroupOutput
                     label="Notes"
                     data={item.notes === "No Notes" ? "" : item.notes}

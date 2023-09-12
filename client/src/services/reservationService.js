@@ -1,7 +1,7 @@
 import axios from "./customAxios";
 
 export const reserve = (reservationTime, numOfPeople, notes, email) => {
-    return axios.post("reserve", {
+    return axios.post("create-reservation", {
         reservationTime,
         numOfPeople,
         notes,
@@ -9,6 +9,6 @@ export const reserve = (reservationTime, numOfPeople, notes, email) => {
     });
 };
 
-export const reservationHistory = (email) => {
-    return axios.get(`reservation/${email}`);
+export const reservationHistory = (userId) => {
+    return axios.get(`reservations?id=${userId}`);
 };

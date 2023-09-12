@@ -18,7 +18,7 @@ const Navigation = () => {
     return (
         <NavigationContainer>
             <Stack.Navigator>
-                {userInfo.data ? (
+                {userInfo.access_token ? (
                     <>
                         <Stack.Screen
                             name="BottomNav"

@@ -19,7 +19,7 @@ import FormGroupInput from "../components/FormGroupInput";
 import MyInput from "../components/MyInput";
 import Title from "../components/Title";
 import { reserve } from "../services/reservationService";
-import { updateUser } from "../services/userService";
+import { getUser, updateUser } from "../services/userService";
 
 const ReservationScreen = () => {
     const [reservationTimeOutput, setReservationTimeOutput] = useState("");
@@ -27,24 +27,31 @@ const ReservationScreen = () => {
     const [numOfPeople, setNumOfPeople] = useState("");
     const [name, setName] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
+    const [email, setEmail] = useState("");
     const [notes, setNotes] = useState("");
 
     const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     const navigation = useNavigation();
 
-    // email in userInfo.data.email reservate, updateUser,
     const { userInfo, isLoading } = useContext(Context);
-    const email = userInfo.data.email;
 
     useEffect(() => {
-        if (userInfo.data.name !== null) {
-            setName(userInfo.data.name);
+        async function fetchData() {
+            try {
+                let res = await getUser(userInfo.user_id);
+                let user = res.data.users;
+
+                setName(user.name);
+                setPhoneNum(user.phone_num);
+                setEmail(user.email);
+            } catch (error) {
+                console.log(error);
+            }
         }
-        if (userInfo.data.phone_num !== null) {
-            setPhoneNum(userInfo.data.phone_num);
-        }
-    }, [userInfo.data]);
+
+        fetchData();
+    }, []);
 
     const showDatePicker = () => {
         setDatePickerVisibility(true);
@@ -100,9 +107,10 @@ const ReservationScreen = () => {
                 email
             );
             let userRes = await updateUser(name, phoneNum, email);
+
             navigation.navigate("Table Reservation Information", {
-                reservationInfo: reserveRes.data,
-                userInfo: userRes.data,
+                reservationInfo: reserveRes.data.reservation,
+                userInfo: userRes.data.user,
             });
             return;
         } catch (error) {
