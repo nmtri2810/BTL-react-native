@@ -1,73 +1,51 @@
-import bcrypt from "bcrypt";
+import authService from "../services/authService.js";
 
-import pool from "../configs/connectDB.js";
+const register = async (req, res) => {
+    try {
+        const { email, password } = req.body;
 
-let register = async (req, res) => {
-    let { email, password } = req.body;
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
 
-    if (!email || !password) {
-        return res.status(400).json({
-            message: "Missing required params",
+        const data = await authService.handleRegister(req.body);
+
+        return res.status(data.status).json({
+            message: data.message,
+            access_token: data.access_token,
+            user_id: data.user_id,
         });
-    }
-
-    let [rows, fields] = await pool.execute(
-        "SELECT * FROM user where email = ?",
-        [email]
-    );
-
-    const user = rows[0];
-    if (!user) {
-        const hash = await bcrypt.hash(password, 13);
-        await pool.execute("INSERT INTO user(email, password) VALUES (?, ?)", [
-            email,
-            hash,
-        ]);
-
-        [rows, fields] = await pool.execute(
-            "SELECT * FROM user where email = ?",
-            [email]
-        );
-
-        return res.status(200).json({
-            data: rows[0],
-        });
-    } else {
-        return res.status(403).json({
-            message: "User already exists",
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
         });
     }
 };
 
 let login = async (req, res) => {
-    let { email, password } = req.body;
+    try {
+        const { email, password } = req.body;
 
-    if (!email || !password) {
-        return res.status(400).json({
-            message: "missing required params",
-        });
-    }
-
-    const [rows, fields] = await pool.execute(
-        "SELECT * FROM user where email = ?",
-        [email]
-    );
-
-    const user = rows[0];
-    if (user) {
-        const isValid = await bcrypt.compare(password, user.password);
-        if (isValid) {
-            return res.status(200).json({
-                data: rows[0],
-            });
-        } else {
-            return res.status(401).json({
-                message: "Wrong password",
+        if (!email || !password) {
+            return res.status(400).json({
+                message: "Missing required parameter",
             });
         }
-    } else {
-        return res.status(401).json({
-            message: "User not exist",
+
+        const data = await authService.handleLogin(email, password);
+
+        return res.status(data.status).json({
+            message: data.message,
+            access_token: data.access_token,
+            user_id: data.user_id,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
         });
     }
 };

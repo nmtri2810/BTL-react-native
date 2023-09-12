@@ -1,52 +1,59 @@
-import pool from "../configs/connectDB.js";
+import reservationService from "../services/reservationService.js";
 
-let getAllReservation = async (req, res) => {
-    const [rows, fields] = await pool.execute("SELECT * FROM reservation");
+const getReservations = async (req, res) => {
+    try {
+        const userId = req.query.id; //all || id
 
-    return res.status(200).json({
-        message: "ok",
-        data: rows,
-    });
-};
+        if (!userId) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
 
-let getReservationByEmail = async (req, res) => {
-    let email = req.params.email;
-    const [rows, fields] = await pool.execute(
-        "SELECT * FROM reservation where email = ? order by id desc",
-        [email]
-    );
+        const data = await reservationService.handleGetReservations(userId);
 
-    return res.status(200).json({
-        data: rows,
-    });
-};
-
-let reserve = async (req, res) => {
-    let { reservationTime, numOfPeople, notes, email } = req.body;
-
-    if (!reservationTime || !numOfPeople || !notes || !email) {
-        return res.status(400).json({
-            message: "missing required params",
+        return res.status(data.status).json({
+            message: data.message,
+            reservations: data.reservations,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
         });
     }
+};
 
-    await pool.execute(
-        "INSERT INTO reservation(reservation_time, num_of_people, notes, email) VALUES (?, ?, ?, ?)",
-        [reservationTime, numOfPeople, notes, email]
-    );
+const createReservation = async (req, res) => {
+    try {
+        const { reservationTime, numOfPeople, notes, email } = req.body;
 
-    const [rows, fields] = await pool.execute(
-        "select reservation.* from reservation join user on reservation.email = user.email where reservation.email = ? order by reservation.id desc limit 1",
-        [email]
-    );
+        if (!reservationTime || !numOfPeople || !notes || !email) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
 
-    return res.status(200).json({
-        data: rows[0],
-    });
+        const data = await reservationService.handleCreateReservation(
+            reservationTime,
+            numOfPeople,
+            notes,
+            email
+        );
+
+        return res.status(data.status).json({
+            message: data.message,
+            reservation: data.reservation,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
 };
 
 export default {
-    getAllReservation,
-    getReservationByEmail,
-    reserve,
+    getReservations,
+    createReservation,
 };

@@ -4,22 +4,19 @@ import userController from "../controllers/userController.js";
 import authController from "../controllers/authController.js";
 import reservationController from "../controllers/reservationController.js";
 
-let router = express.Router();
+const router = express.Router();
 
 const initApiRoute = (app) => {
     router.post("/register", authController.register);
     router.post("/login", authController.login);
 
-    router.get("/users", userController.getAllUser);
-    router.get("/users/:email", userController.getUser);
+    router.get("/users", userController.getUsers);
+    router.post("/create-user", userController.createUser);
     router.put("/update-user", userController.updateUser);
+    router.delete("/detele-user", userController.deleteUser);
 
-    router.get("/reservation", reservationController.getAllReservation);
-    router.get(
-        "/reservation/:email",
-        reservationController.getReservationByEmail
-    );
-    router.post("/reserve", reservationController.reserve);
+    router.get("/reservations", reservationController.getReservations);
+    router.post("/create-reservation", reservationController.createReservation);
 
     return app.use("/api/", router);
 };

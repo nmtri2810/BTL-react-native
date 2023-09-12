@@ -1,49 +1,104 @@
-import pool from "../configs/connectDB.js";
+import userService from "../services/userService.js";
 
-let getAllUser = async (req, res) => {
-    const [rows, fields] = await pool.execute("SELECT * FROM user");
+const getUsers = async (req, res) => {
+    try {
+        const id = req.query.id; //all || id
 
-    return res.status(200).json({
-        message: "ok",
-        data: rows,
-    });
-};
+        if (!id) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
 
-let getUser = async (req, res) => {
-    let email = req.params.email;
+        const data = await userService.handleGetUsers(id);
 
-    const [rows, fields] = await pool.execute(
-        "SELECT * FROM user where email = ?",
-        [email]
-    );
-
-    return res.status(200).json({
-        data: rows[0],
-    });
-};
-
-let updateUser = async (req, res) => {
-    let { name, phoneNum, email } = req.body;
-
-    if (!name || !phoneNum || !email) {
-        return res.status(400).json({
-            message: "missing required params",
+        return res.status(data.status).json({
+            message: data.message,
+            users: data.users,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
         });
     }
-
-    await pool.execute(
-        "update user set name = ?, phone_num = ? where email = ?",
-        [name, phoneNum, email]
-    );
-
-    const [rows, fields] = await pool.execute(
-        "SELECT * FROM user where email = ?",
-        [email]
-    );
-
-    return res.status(200).json({
-        data: rows[0],
-    });
 };
 
-export default { getAllUser, getUser, updateUser };
+const createUser = async (req, res) => {
+    try {
+        const { email, password, name, phoneNum } = req.body;
+
+        if (!email || !password || !name || !phoneNum) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
+
+        const data = await userService.handleCreateUser(
+            email,
+            password,
+            name,
+            phoneNum
+        );
+
+        return res.status(data.status).json({
+            message: data.message,
+            user_id: data.user_id,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
+};
+
+//update user by email
+const updateUser = async (req, res) => {
+    try {
+        const { name, phoneNum, email } = req.body;
+
+        if (!name || !phoneNum || !email) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
+
+        const data = await userService.handleUpdateUser(name, phoneNum, email);
+
+        return res.status(data.status).json({
+            message: data.message,
+            user: data.user,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
+};
+
+const deleteUser = async (req, res) => {
+    try {
+        const id = req.body.id;
+
+        if (!id) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
+
+        const data = await userService.handleDeleteUser(id);
+
+        return res.status(data.status).json({
+            message: data.message,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
+};
+
+export default { getUsers, createUser, updateUser, deleteUser };
