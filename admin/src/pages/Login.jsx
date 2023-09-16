@@ -1,11 +1,13 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import AuthContext from "../context/authProvider";
+import useAuth from "../hooks/useAuth";
 import axios from "../api/customAxios";
 
 const Login = () => {
-    const { setAuth } = useContext(AuthContext);
+    const { setAuth } = useAuth();
+
+    const navigate = useNavigate();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -18,8 +20,14 @@ const Login = () => {
             });
             const accessToken = res.data.access_token;
             const role = res.data.user.role_id;
-            console.log(accessToken, role);
-            setAuth({ email, password, role, accessToken });
+
+            setAuth({ email, role, accessToken });
+
+            if (role === "AD") {
+                navigate("/admin", { replace: true });
+            } else if (role === "US") {
+                navigate("/unauthorized", { replace: true });
+            }
         } catch (error) {
             if (!error?.response) {
                 alert("No server response");

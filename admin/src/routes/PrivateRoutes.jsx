@@ -1,12 +1,16 @@
-// import React, { useContext } from "react";
-// import { Navigate, Outlet } from "react-router-dom";
+import { useLocation, Navigate, Outlet } from "react-router-dom";
 
-// import Context from "../store/Context";
+import useAuth from "../hooks/useAuth";
 
-// const PrivateRoutes = () => {
-//     const { userInfo } = useContext(Context);
+const PrivateRoutes = ({ allowedRoles }) => {
+    const { auth } = useAuth();
+    const location = useLocation();
 
-//     return userInfo.access_token ? <Outlet /> : <Navigate to="/login" />;
-// };
+    return auth?.role === allowedRoles ? (
+        <Outlet />
+    ) : (
+        <Navigate to="/login" state={{ from: location }} replace />
+    );
+};
 
-// export default PrivateRoutes;
+export default PrivateRoutes;
