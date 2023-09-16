@@ -30,11 +30,13 @@ const handleRegister = async (data) => {
                 }
             );
 
+            user = { id: user.id, role_id: user.role_id };
+
             return {
                 status: 201,
                 message: "Ok",
                 access_token: accessToken,
-                user_id: user.id,
+                user: user,
             };
         }
     } catch (error) {
@@ -64,7 +66,7 @@ const handleLogin = async (email, password) => {
                 };
             } else {
                 let accessToken = jwt.sign(
-                    { userId: user.email },
+                    { userId: user.id },
                     process.env.ACCESS_TOKEN_SECRET,
                     {
                         expiresIn: "7d",

@@ -17,7 +17,7 @@ const register = async (req, res) => {
         return res.status(data.status).json({
             message: data.message,
             access_token: data.access_token,
-            user_id: data.user_id,
+            user: data.user,
         });
     } catch (error) {
         console.log(error);
@@ -39,10 +39,10 @@ let login = async (req, res) => {
 
         const data = await authService.handleLogin(email, password);
 
-        // res.cookie("jwt", data.access_token, {
-        //     httpOnly: true,
-        //     maxAge: 7 * 24 * 60 * 60 * 1000,
-        // });
+        res.cookie("jwt", data.access_token, {
+            httpOnly: true,
+            maxAge: 7 * 24 * 60 * 60 * 1000,
+        });
 
         return res.status(data.status).json({
             message: data.message,
