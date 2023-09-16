@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import "dotenv/config";
 import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
 
 import initApiRoute from "./routes/api.js";
 
@@ -12,9 +13,12 @@ app.use(bodyParser.json());
 
 app.use(
     cors({
-        origin: true,
+        origin: "http://localhost:3000",
+        credentials: true,
     })
 );
+
+app.use(cookieParser());
 
 //init api route
 initApiRoute(app);

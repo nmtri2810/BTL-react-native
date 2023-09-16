@@ -71,11 +71,13 @@ const handleLogin = async (email, password) => {
                     }
                 );
 
+                user = { id: user.id, role_id: user.role_id };
+
                 return {
                     status: 200,
                     message: "Ok",
                     access_token: accessToken,
-                    user_id: user.id,
+                    user: user,
                 };
             }
         }

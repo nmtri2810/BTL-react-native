@@ -8,9 +8,7 @@ function App() {
     return (
         <Router>
             <Routes>
-                <Route path="/" element={<PrivateRoutes />}>
-                    <Route path="/admin" element={<Admin />} />
-                </Route>
+                <Route path="/admin" element={<Admin />} />
                 <Route path="/login" element={<Login />} />
             </Routes>
         </Router>

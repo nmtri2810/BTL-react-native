@@ -1,3 +1,5 @@
+import jwt from "jsonwebtoken";
+
 import authService from "../services/authService.js";
 
 const register = async (req, res) => {
@@ -37,10 +39,15 @@ let login = async (req, res) => {
 
         const data = await authService.handleLogin(email, password);
 
+        // res.cookie("jwt", data.access_token, {
+        //     httpOnly: true,
+        //     maxAge: 7 * 24 * 60 * 60 * 1000,
+        // });
+
         return res.status(data.status).json({
             message: data.message,
             access_token: data.access_token,
-            user_id: data.user_id,
+            user: data.user,
         });
     } catch (error) {
         console.log(error);
@@ -48,6 +55,17 @@ let login = async (req, res) => {
             message: "Error from server",
         });
     }
+};
+
+export const handleAuthenticateToken = (req, res, next) => {
+    const authHeader = req.headers["authorization"];
+    const token = authHeader.split(" ")[1];
+    if (!token) res.sendStatus(401);
+
+    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+        if (err) res.sendStatus(403);
+        next();
+    });
 };
 
 export default { register, login };

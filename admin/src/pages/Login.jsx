@@ -1,13 +1,37 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import AuthContext from "../context/authProvider";
+import axios from "../api/customAxios";
+
 const Login = () => {
-    const navigate = useNavigate();
+    const { setAuth } = useContext(AuthContext);
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = async () => {};
+    const handleLogin = async () => {
+        try {
+            const res = await axios.post("login", {
+                email,
+                password,
+            });
+            const accessToken = res.data.access_token;
+            const role = res.data.user.role_id;
+            console.log(accessToken, role);
+            setAuth({ email, password, role, accessToken });
+        } catch (error) {
+            if (!error?.response) {
+                alert("No server response");
+            } else if (error.response.status === 400) {
+                alert("Missing username or password");
+            } else if (error.response.status === 401) {
+                alert("Unauthorized");
+            } else {
+                alert("Login failed");
+            }
+        }
+    };
 
     return (
         <div className="bg-gray-50 dark:bg-gray-900">
