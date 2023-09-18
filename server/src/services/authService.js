@@ -22,20 +22,20 @@ const handleRegister = async (data) => {
 
             user = await checkUserEmailFromDB(data.email);
 
-            let accessToken = jwt.sign(
-                { userId: user.email },
-                process.env.ACCESS_TOKEN_SECRET,
-                {
-                    expiresIn: "7d",
-                }
-            );
+            // let accessToken = jwt.sign(
+            //     { user: user.email },
+            //     process.env.ACCESS_TOKEN_SECRET,
+            //     {
+            //         expiresIn: "7d",
+            //     }
+            // );
 
             user = { id: user.id, role_id: user.role_id };
 
             return {
                 status: 201,
                 message: "Ok",
-                access_token: accessToken,
+                // access_token: accessToken,
                 user: user,
             };
         }
@@ -65,24 +65,60 @@ const handleLogin = async (email, password) => {
                     message: "Wrong password",
                 };
             } else {
+                user = { id: user.id, role_id: user.role_id };
                 let accessToken = jwt.sign(
-                    { userId: user.id },
+                    { user },
                     process.env.ACCESS_TOKEN_SECRET,
                     {
-                        expiresIn: "7d",
+                        expiresIn: "30s",
+                    }
+                );
+                let refreshToken = jwt.sign(
+                    { user },
+                    process.env.REFRESH_TOKEN_SECRET,
+                    {
+                        expiresIn: "1d",
                     }
                 );
 
-                user = { id: user.id, role_id: user.role_id };
+                //store in DB ?
+                await pool.execute(
+                    "INSERT INTO refresh_tokens(refresh_token, user_id) VALUES (?, ?)",
+                    [refreshToken, user.id]
+                );
 
                 return {
                     status: 200,
                     message: "Ok",
                     access_token: accessToken,
+                    refresh_token: refreshToken,
                     user: user,
                 };
             }
         }
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
+};
+
+const handleLogout = async (refreshToken) => {
+    try {
+        const [rows, fields] = await pool.execute(
+            "SELECT * FROM refresh_tokens where refresh_token = ?",
+            [refreshToken]
+        );
+
+        if (rows[0]) {
+            await pool.execute(
+                "delete from refresh_tokens where refresh_token = ? ",
+                [refreshToken]
+            );
+        }
+
+        return;
     } catch (error) {
         console.log(error);
         return res.status(500).json({
@@ -129,4 +165,5 @@ const hashUserPassword = async (password) => {
 export default {
     handleRegister,
     handleLogin,
+    handleLogout,
 };

@@ -1,7 +1,6 @@
-import jwt from "jsonwebtoken";
-
 import authService from "../services/authService.js";
 
+//add jwt authentication for register
 const register = async (req, res) => {
     try {
         const { email, password } = req.body;
@@ -16,7 +15,7 @@ const register = async (req, res) => {
 
         return res.status(data.status).json({
             message: data.message,
-            access_token: data.access_token,
+            // access_token: data.access_token,
             user: data.user,
         });
     } catch (error) {
@@ -27,7 +26,7 @@ const register = async (req, res) => {
     }
 };
 
-let login = async (req, res) => {
+const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
@@ -39,9 +38,10 @@ let login = async (req, res) => {
 
         const data = await authService.handleLogin(email, password);
 
-        res.cookie("jwt", data.access_token, {
+        res.cookie("jwt", data.refresh_token, {
             httpOnly: true,
-            maxAge: 7 * 24 * 60 * 60 * 1000,
+            maxAge: 24 * 60 * 60 * 1000,
+            // secure: true,
         });
 
         return res.status(data.status).json({
@@ -57,15 +57,25 @@ let login = async (req, res) => {
     }
 };
 
-export const handleAuthenticateToken = (req, res, next) => {
-    const authHeader = req.headers["authorization"];
-    const token = authHeader.split(" ")[1];
-    if (!token) res.sendStatus(401);
+const logout = async (req, res) => {
+    try {
+        const refreshToken = req.cookies.jwt;
+        if (refreshToken == null) return res.sendStatus(204);
 
-    jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
-        if (err) res.sendStatus(403);
-        next();
-    });
+        await authService.handleLogout(refreshToken);
+
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        });
+
+        return res.sendStatus(204);
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
 };
 
-export default { register, login };
+export default { register, login, logout };

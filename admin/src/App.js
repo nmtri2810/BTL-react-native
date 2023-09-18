@@ -12,6 +12,7 @@ import Unauthorized from "./components/pages/Unauthorized";
 import NotFound from "./components/pages/NotFound";
 
 import PrivateRoutes from "./routes/PrivateRoutes";
+import PersistLogin from "./routes/PersistLogin";
 import NavBar from "./components/UI/NavBar";
 import useAuth from "./hooks/useAuth";
 
@@ -23,18 +24,32 @@ function App() {
             {auth?.role === "AD" ? <NavBar /> : null}
             <Routes>
                 <Route path="/login" element={<Login />} />
-                <Route element={<PrivateRoutes allowedRoles={"AD"} />}>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/users" element={<Users />} />
-                    <Route path="/roles" element={<Roles />} />
-                    <Route path="/reservations" element={<Reservations />} />
-                    <Route path="/deals" element={<Deals />} />
-                    <Route path="/news" element={<News />} />
-                    <Route path="/notifications" element={<Notifications />} />
+
+                <Route element={<PersistLogin />}>
+                    <Route element={<PrivateRoutes allowedRoles={"AD"} />}>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/users" element={<Users />} />
+                        <Route path="/roles" element={<Roles />} />
+                        <Route
+                            path="/reservations"
+                            element={<Reservations />}
+                        />
+                        <Route path="/deals" element={<Deals />} />
+                        <Route path="/news" element={<News />} />
+                        <Route
+                            path="/notifications"
+                            element={<Notifications />}
+                        />
+                    </Route>
+
+                    <Route element={<PrivateRoutes allowedRoles={"US"} />}>
+                        <Route
+                            path="/unauthorized"
+                            element={<Unauthorized />}
+                        />
+                    </Route>
                 </Route>
-                <Route element={<PrivateRoutes allowedRoles={"US"} />}>
-                    <Route path="/unauthorized" element={<Unauthorized />} />
-                </Route>
+
                 <Route path="*" element={<NotFound />} />
             </Routes>
         </Router>

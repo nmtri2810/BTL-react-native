@@ -1,16 +1,19 @@
 import express from "express";
 
 import userController from "../controllers/userController.js";
-import authController, {
-    handleAuthenticateToken,
-} from "../controllers/authController.js";
+import authController from "../controllers/authController.js";
 import reservationController from "../controllers/reservationController.js";
+import { handleAuthenticateToken } from "../middlewares/verifyJWT.js";
+import refreshTokenController from "../controllers/refreshTokenController.js";
 
 const router = express.Router();
 
 const initApiRoute = (app) => {
     router.post("/register", authController.register);
     router.post("/login", authController.login);
+    router.post("/logout", authController.logout);
+
+    router.get("/refresh", refreshTokenController.refreshToken);
 
     router.get("/users", handleAuthenticateToken, userController.getUsers);
     router.post("/create-user", userController.createUser);
