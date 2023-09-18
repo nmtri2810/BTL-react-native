@@ -18,8 +18,8 @@ import MyButton from "../components/MyButton";
 import FormGroupInput from "../components/FormGroupInput";
 import MyInput from "../components/MyInput";
 import Title from "../components/Title";
-import { reserve } from "../services/reservationService";
-import { getUser, updateUser } from "../services/userService";
+
+import axios from "../api/customAxios";
 
 const ReservationScreen = () => {
     const [reservationTimeOutput, setReservationTimeOutput] = useState("");
@@ -39,7 +39,7 @@ const ReservationScreen = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let res = await getUser(userInfo.user_id);
+                let res = await axios.get(`users/?id=${userInfo.user.id}`);
                 let user = res.data.users;
 
                 setName(user.name);
@@ -100,17 +100,23 @@ const ReservationScreen = () => {
             const updatedNotes = notes.length === 0 ? "No Notes" : notes;
 
             //reservationTimeSaved
-            let reserveRes = await reserve(
-                "20230604190000",
+            let reserveRes = await axios.post("create-reservation", {
+                reservationTime: "20230604190000",
                 numOfPeople,
-                updatedNotes,
-                email
-            );
-            let userRes = await updateUser(name, phoneNum, email);
+                name,
+                phoneNum,
+                email,
+                notes: updatedNotes,
+            });
+            let userRes = await axios.put("update-user", {
+                name,
+                phoneNum,
+                email,
+            });
+            console.log(userRes);
 
             navigation.navigate("Table Reservation Information", {
                 reservationInfo: reserveRes.data.reservation,
-                userInfo: userRes.data.user,
             });
             return;
         } catch (error) {

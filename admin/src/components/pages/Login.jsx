@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import useAuth from "../hooks/useAuth";
-import axios from "../api/customAxios";
+import useAuth from "../../hooks/useAuth";
+import axios from "../../api/customAxios";
 
 const Login = () => {
     const { setAuth } = useAuth();
@@ -24,7 +24,7 @@ const Login = () => {
             setAuth({ email, role, accessToken });
 
             if (role === "AD") {
-                navigate("/admin", { replace: true });
+                navigate("/", { replace: true });
             } else if (role === "US") {
                 navigate("/unauthorized", { replace: true });
             }

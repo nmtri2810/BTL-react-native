@@ -26,9 +26,9 @@ const getUsers = async (req, res) => {
 
 const createUser = async (req, res) => {
     try {
-        const { email, password, name, phoneNum } = req.body;
+        const { email, password, name, phoneNum, role } = req.body;
 
-        if (!email || !password || !name || !phoneNum) {
+        if (!email || !password || !name || !phoneNum || !role) {
             return res.status(400).json({
                 message: "Missing required parameter",
             });
@@ -38,12 +38,13 @@ const createUser = async (req, res) => {
             email,
             password,
             name,
-            phoneNum
+            phoneNum,
+            role
         );
 
         return res.status(data.status).json({
             message: data.message,
-            user_id: data.user_id,
+            user: data.user,
         });
     } catch (error) {
         console.log(error);

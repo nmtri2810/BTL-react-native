@@ -13,7 +13,8 @@ import MyButton from "../components/MyButton";
 import Card from "../components/Card";
 import { useNavigation } from "@react-navigation/native";
 import { accountItems } from "../data/accountItems";
-import { getUser } from "../services/userService";
+
+import axios from "../api/customAxios";
 
 const AccountScreen = () => {
     const { logout, userInfo, isLoading } = useContext(Context);
@@ -23,7 +24,7 @@ const AccountScreen = () => {
     useEffect(() => {
         async function fetchData() {
             try {
-                let res = await getUser(userInfo.user_id);
+                let res = await axios.get(`users/?id=${userInfo.user.id}`);
                 let user = res.data.users;
 
                 setEmail(user.email);

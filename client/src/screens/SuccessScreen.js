@@ -1,6 +1,5 @@
 import React, { useContext } from "react";
 import { View, Text, StyleSheet, Image } from "react-native";
-import Context from "../store/Context";
 import moment from "moment";
 import FormGroupOutput from "../components/FormGroupOutput";
 import Card from "../components/Card";
@@ -8,7 +7,7 @@ import { useRoute } from "@react-navigation/native";
 
 const SuccessScreen = () => {
     const route = useRoute();
-    const { reservationInfo, userInfo } = route.params;
+    const { reservationInfo } = route.params;
 
     return (
         <View style={styles.container}>
@@ -37,12 +36,15 @@ const SuccessScreen = () => {
                     label="Number of people"
                     data={reservationInfo.num_of_people}
                 />
-                <FormGroupOutput label="Full name" data={userInfo.name} />
+                <FormGroupOutput
+                    label="Full name"
+                    data={reservationInfo.name}
+                />
                 <FormGroupOutput
                     label="Phone number"
-                    data={userInfo.phone_num}
+                    data={reservationInfo.phone_num}
                 />
-                <FormGroupOutput label="Email" data={userInfo.email} />
+                <FormGroupOutput label="Email" data={reservationInfo.email} />
                 <FormGroupOutput
                     label="Notes"
                     data={

@@ -35,7 +35,7 @@ const handleGetUsers = async (id) => {
     }
 };
 
-const handleCreateUser = async (email, password, name, phoneNum) => {
+const handleCreateUser = async (email, password, name, phoneNum, role) => {
     try {
         let user = await checkUserEmailFromDB(email);
 
@@ -48,16 +48,17 @@ const handleCreateUser = async (email, password, name, phoneNum) => {
             const hashPassword = await hashUserPassword(password);
 
             await pool.execute(
-                "INSERT INTO users(email, password, name, phone_num) VALUES (?, ?, ?, ?)",
-                [email, hashPassword, name, phoneNum]
+                "INSERT INTO users(email, password, name, phone_num, role_id) VALUES (?, ?, ?, ?, ?)",
+                [email, hashPassword, name, phoneNum, role]
             );
 
             user = await checkUserEmailFromDB(email);
+            delete user.password;
 
             return {
                 status: 201,
                 message: "Ok",
-                user_id: user.id,
+                user: user,
             };
         }
     } catch (error) {

@@ -26,9 +26,17 @@ const getReservations = async (req, res) => {
 
 const createReservation = async (req, res) => {
     try {
-        const { reservationTime, numOfPeople, notes, email } = req.body;
+        const { reservationTime, numOfPeople, name, phoneNum, email, notes } =
+            req.body;
 
-        if (!reservationTime || !numOfPeople || !notes || !email) {
+        if (
+            !reservationTime ||
+            !numOfPeople ||
+            !name ||
+            !phoneNum ||
+            !email ||
+            !notes
+        ) {
             return res.status(400).json({
                 message: "Missing required parameter",
             });
@@ -37,8 +45,10 @@ const createReservation = async (req, res) => {
         const data = await reservationService.handleCreateReservation(
             reservationTime,
             numOfPeople,
-            notes,
-            email
+            name,
+            phoneNum,
+            email,
+            notes
         );
 
         return res.status(data.status).json({

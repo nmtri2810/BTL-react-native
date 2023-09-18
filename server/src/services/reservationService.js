@@ -10,7 +10,7 @@ const handleGetReservations = async (userId) => {
             reservations = rows;
         } else if (userId && userId !== "all") {
             const [rows, fields] = await pool.execute(
-                "SELECT * FROM reservations where user_id = ? order by id desc",
+                "SELECT * FROM reservations where user_id = ? order by id",
                 [userId]
             );
             reservations = rows;
@@ -32,15 +32,25 @@ const handleGetReservations = async (userId) => {
 const handleCreateReservation = async (
     reservationTime,
     numOfPeople,
-    notes,
-    email
+    name,
+    phoneNum,
+    email,
+    notes
 ) => {
     try {
         let user = await checkUserEmailFromDB(email);
 
         await pool.execute(
-            "INSERT INTO reservations(reservation_time, num_of_people, notes, user_id) VALUES (?, ?, ?, ?)",
-            [reservationTime, numOfPeople, notes, user.id]
+            "INSERT INTO reservations(reservation_time, num_of_people, name, phone_num, email, notes, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+            [
+                reservationTime,
+                numOfPeople,
+                name,
+                phoneNum,
+                email,
+                notes,
+                user.id,
+            ]
         );
 
         const [rows, fields] = await pool.execute(
