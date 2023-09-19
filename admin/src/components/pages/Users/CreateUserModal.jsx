@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import { Modal } from "flowbite-react";
+import { useState } from "react";
 
 import axios from "../../../api/customAxios";
 
-const UserModal = ({ isVisible, onClose }) => {
+const CreateUserModal = ({ onUserCreated }) => {
+    const [openModal, setOpenModal] = useState();
+    const props = { openModal, setOpenModal };
+
     const [userInput, setUserInput] = useState({
         email: "",
         password: "",
@@ -33,7 +37,8 @@ const UserModal = ({ isVisible, onClose }) => {
                 phoneNum: "",
                 role: "",
             });
-            onClose();
+            onUserCreated();
+            props.setOpenModal(undefined);
         } catch (error) {
             if (!error?.response) {
                 alert("No server response");
@@ -47,34 +52,24 @@ const UserModal = ({ isVisible, onClose }) => {
         }
     };
 
-    //logic for open and close modal
-    const handleClose = (e) => {
-        if (e.target.id === "wrapper") onClose();
-    };
-    if (!isVisible) return null;
-
     return (
-        <div
-            id="wrapper"
-            className="flex overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-modal md:h-full bg-black/30"
-            onClick={handleClose}
-        >
-            <div className="relative w-full max-w-2xl h-full md:h-auto">
-                <div className="relative p-4 bg-white rounded-lg shadow-lg dark:bg-gray-800 sm:p-5">
-                    <div className="flex justify-between items-center pb-4 mb-4 rounded-t border-b sm:mb-5 dark:border-gray-600">
-                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            CREATE NEW USER
-                        </h3>
-                        <button
-                            className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center dark:hover:bg-gray-600 dark:hover:text-white"
-                            onClick={() => onClose()}
-                        >
-                            <i className="fa-solid fa-x text-lg"></i>
-                        </button>
-                    </div>
-
-                    <div className="grid gap-4 mb-4 sm:grid-cols-2">
-                        <div>
+        <>
+            <button
+                onClick={() => props.setOpenModal("dismissible")}
+                className="text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-base px-4 py-2 text-center mr-2"
+            >
+                <i className="fa-solid fa-plus mr-2"></i>
+                Create new user
+            </button>
+            <Modal
+                dismissible
+                show={props.openModal === "dismissible"}
+                onClose={() => props.setOpenModal(undefined)}
+            >
+                <Modal.Header>CREATE NEW USER</Modal.Header>
+                <Modal.Body>
+                    <div className="grid gap-4 sm:grid-cols-2">
+                        <div className="form-group">
                             <label
                                 htmlFor="email"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -92,7 +87,7 @@ const UserModal = ({ isVisible, onClose }) => {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <div>
+                        <div className="form-group">
                             <label
                                 htmlFor="password"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -110,7 +105,7 @@ const UserModal = ({ isVisible, onClose }) => {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <div>
+                        <div className="form-group">
                             <label
                                 htmlFor="name"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -128,7 +123,7 @@ const UserModal = ({ isVisible, onClose }) => {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <div>
+                        <div className="form-group">
                             <label
                                 htmlFor="phoneNum"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -146,7 +141,7 @@ const UserModal = ({ isVisible, onClose }) => {
                                 onChange={handleInputChange}
                             />
                         </div>
-                        <div>
+                        <div className="form-group">
                             <label
                                 htmlFor="role"
                                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
@@ -169,19 +164,19 @@ const UserModal = ({ isVisible, onClose }) => {
                                 <option value="US">User</option>
                             </select>
                         </div>
-                        <div className="flex justify-end items-end">
-                            <button
-                                className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                                onClick={handleCreateUser}
-                            >
-                                Create
-                            </button>
-                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </Modal.Body>
+                <Modal.Footer>
+                    <button
+                        className="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                        onClick={handleCreateUser}
+                    >
+                        Create
+                    </button>
+                </Modal.Footer>
+            </Modal>
+        </>
     );
 };
 
-export default UserModal;
+export default CreateUserModal;

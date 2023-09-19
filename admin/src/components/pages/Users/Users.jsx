@@ -2,17 +2,16 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import Container from "../../UI/Container";
-import Button from "../../UI/Button";
-import UserModal from "./UserModal";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import CreateUserModal from "./CreateUserModal";
+import PopUpModal from "./DeleteUserModal";
 
 const Users = () => {
     const axiosPrivate = useAxiosPrivate();
-
     const navigate = useNavigate();
 
     const [userList, setUserList] = useState([]);
-    const [showUserModal, setShowUserModal] = useState(false);
+    const [userCreated, setUserCreated] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -37,7 +36,7 @@ const Users = () => {
             isMounted = false;
             isMounted && controller.abort();
         };
-    }, []); //temporary showUserModal to update user list
+    }, [axiosPrivate, navigate, userCreated]);
 
     const setRole = (roleId) => {
         switch (roleId) {
@@ -54,29 +53,22 @@ const Users = () => {
 
     return (
         <Container>
-            <UserModal
-                isVisible={showUserModal}
-                onClose={() => setShowUserModal(false)}
-            />
+            <PopUpModal />
             <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
             {userList?.length ? (
                 <div className="body">
                     <div className="mb-4">
-                        <Button
-                            textColor={"white"}
-                            bgColor={"green"}
-                            title={"Refresh"}
-                            icon={
-                                <i className="fa-solid fa-rotate-right mr-2"></i>
-                            }
-                            otherClass={"mr-2"}
-                        />
-                        <Button
-                            textColor={"white"}
-                            bgColor={"primary"}
-                            title={"Create new user"}
-                            icon={<i className="fa-solid fa-plus mr-2"></i>}
-                            onclick={() => setShowUserModal(true)}
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center mr-2"
+                        >
+                            <i className="fa-solid fa-rotate-right mr-2"></i>
+                            Refresh
+                        </button>
+                        <CreateUserModal
+                            onUserCreated={() => {
+                                setUserCreated(true);
+                            }}
                         />
                     </div>
                     <div className="mx-auto overflow-x-auto shadow-md sm:rounded-lg">
@@ -144,7 +136,7 @@ const Users = () => {
                             </tbody>
                         </table>
                     </div>
-                    <nav className="mt-8 flex justify-center">
+                    <nav className="my-8 flex justify-center">
                         <ul className="inline-flex -space-x-px text-base h-10">
                             <li>
                                 <a

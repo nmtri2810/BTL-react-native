@@ -7,8 +7,8 @@ const useRefreshToken = () => {
     const refresh = async () => {
         const res = await axios.get("refresh");
         setAuth((prev) => {
-            console.log(JSON.stringify(prev));
-            console.log(res.data.access_token);
+            // console.log(JSON.stringify(prev));
+            // console.log(res.data.access_token);
             return {
                 ...prev,
                 email: res.data.email,
