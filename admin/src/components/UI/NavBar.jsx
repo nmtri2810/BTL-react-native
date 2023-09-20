@@ -1,15 +1,14 @@
-import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import React from "react";
+import { NavLink } from "react-router-dom";
 
 import useAuth from "../../hooks/useAuth";
+import { Avatar, Dropdown } from "flowbite-react";
 
 const NavBar = () => {
-    const [isShown, setIsShown] = useState(false);
-
     const { auth } = useAuth();
 
-    const showUserDropdown = () => {
-        setIsShown(!isShown);
+    const handleLogout = () => {
+        alert("Logout");
     };
 
     return (
@@ -81,70 +80,49 @@ const NavBar = () => {
                         </li>
                     </ul>
                 </div>
-                <div className="flex items-center relative">
-                    <button
-                        className="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
-                        id="user-menu-button"
-                        onClick={showUserDropdown}
-                    >
-                        <img
-                            className="w-8 h-8 rounded-full bg-white"
-                            src="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
-                            alt="user"
+                <Dropdown
+                    inline
+                    placement="bottom-end"
+                    label={
+                        <Avatar
+                            alt="User"
+                            img="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
+                            size="sm"
                         />
-                    </button>
-                    <div
-                        className={`z-50 absolute top-9 right-0 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow border-gray-100 border-solid border dark:bg-gray-700 dark:divide-gray-600"
-                            id="user-dropdown ${isShown ? "block" : "hidden"}`}
+                    }
+                >
+                    <Dropdown.Header>
+                        <span className="block truncate text-sm font-medium">
+                            {auth.email}
+                        </span>
+                    </Dropdown.Header>
+                    <Dropdown.Item onClick={handleLogout}>
+                        Sign out
+                    </Dropdown.Item>
+                </Dropdown>
+                <button
+                    data-collapse-toggle="navbar-user"
+                    type="button"
+                    className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+                    aria-controls="navbar-user"
+                    aria-expanded="false"
+                >
+                    <svg
+                        className="w-5 h-5"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 17 14"
                     >
-                        <div className="px-4 py-3">
-                            <span className="block text-sm font-bold text-gray-900 dark:text-white">
-                                {auth.email}
-                            </span>
-                        </div>
-                        <ul className="py-2" aria-labelledby="user-menu-button">
-                            <li>
-                                <Link
-                                    href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                >
-                                    Settings
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="#"
-                                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
-                                >
-                                    Sign out
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
-                    <button
-                        data-collapse-toggle="navbar-user"
-                        type="button"
-                        className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-gray-500 rounded-lg md:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
-                        aria-controls="navbar-user"
-                        aria-expanded="false"
-                    >
-                        <svg
-                            className="w-5 h-5"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 17 14"
-                        >
-                            <path
-                                stroke="currentColor"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M1 1h15M1 7h15M1 13h15"
-                            />
-                        </svg>
-                    </button>
-                </div>
+                        <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
+                            d="M1 1h15M1 7h15M1 13h15"
+                        />
+                    </svg>
+                </button>
             </div>
         </nav>
     );

@@ -4,14 +4,14 @@ import { useNavigate } from "react-router-dom";
 import Container from "../../UI/Container";
 import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import CreateUserModal from "./CreateUserModal";
-import PopUpModal from "./DeleteUserModal";
+import DeleteUserModal from "./DeleteUserModal";
 
 const Users = () => {
     const axiosPrivate = useAxiosPrivate();
     const navigate = useNavigate();
 
     const [userList, setUserList] = useState([]);
-    const [userCreated, setUserCreated] = useState(false);
+    const [CRUDState, setCRUDState] = useState(false);
 
     useEffect(() => {
         let isMounted = true;
@@ -22,6 +22,7 @@ const Users = () => {
                 const res = await axiosPrivate.get("users?id=all", {
                     signal: controller.signal,
                 });
+                setCRUDState(false);
                 isMounted && setUserList(res.data.users);
             } catch (error) {
                 console.log(error);
@@ -36,7 +37,7 @@ const Users = () => {
             isMounted = false;
             isMounted && controller.abort();
         };
-    }, [axiosPrivate, navigate, userCreated]);
+    }, [axiosPrivate, navigate, CRUDState]);
 
     const setRole = (roleId) => {
         switch (roleId) {
@@ -53,7 +54,6 @@ const Users = () => {
 
     return (
         <Container>
-            <PopUpModal />
             <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
             {userList?.length ? (
                 <div className="body">
@@ -67,7 +67,7 @@ const Users = () => {
                         </button>
                         <CreateUserModal
                             onUserCreated={() => {
-                                setUserCreated(true);
+                                setCRUDState(true);
                             }}
                         />
                     </div>
@@ -127,9 +127,13 @@ const Users = () => {
                                             <button className="font-medium text-primary-600 hover:underline">
                                                 Edit
                                             </button>
-                                            <button className="font-medium text-red-600 hover:underline ml-3">
-                                                Delete
-                                            </button>
+                                            <DeleteUserModal
+                                                userId={user.id}
+                                                email={user.email}
+                                                onUserDelete={() =>
+                                                    setCRUDState(true)
+                                                }
+                                            />
                                         </td>
                                     </tr>
                                 ))}

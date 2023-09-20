@@ -63,6 +63,7 @@ const CreateUserModal = ({ onUserCreated }) => {
             </button>
             <Modal
                 dismissible
+                size="2xl"
                 show={props.openModal === "dismissible"}
                 onClose={() => props.setOpenModal(undefined)}
             >

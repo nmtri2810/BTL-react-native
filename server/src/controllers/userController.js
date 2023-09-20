@@ -81,7 +81,7 @@ const updateUser = async (req, res) => {
 
 const deleteUser = async (req, res) => {
     try {
-        const id = req.body.id;
+        const id = req.query.id;
 
         if (!id) {
             return res.status(400).json({
