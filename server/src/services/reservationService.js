@@ -23,9 +23,6 @@ const handleGetReservations = async (userId) => {
         };
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -65,9 +62,6 @@ const handleCreateReservation = async (
         };
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -87,9 +81,6 @@ const checkUserEmailFromDB = async (email) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 

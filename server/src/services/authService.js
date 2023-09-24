@@ -41,9 +41,6 @@ const handleRegister = async (data) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -98,9 +95,6 @@ const handleLogin = async (email, password) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -121,9 +115,6 @@ const handleLogout = async (refreshToken) => {
         return;
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -143,9 +134,6 @@ const checkUserEmailFromDB = async (email) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -156,9 +144,6 @@ const hashUserPassword = async (password) => {
         return hashPassword;
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 

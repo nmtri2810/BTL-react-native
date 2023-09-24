@@ -1,17 +1,23 @@
 import bcrypt from "bcrypt";
 
 import pool from "../configs/connectDB.js";
+import { pagination } from "../controllers/paginationController.js";
 
-const handleGetUsers = async (id) => {
+const handleGetUsers = async (id, page, limit) => {
     try {
         let users;
         if (id === "all") {
-            const [rows, fields] = await pool.execute("SELECT * FROM users");
-            users = rows;
-            for (let user in users) {
-                if (users[user].hasOwnProperty("password")) {
-                    delete users[user].password;
-                }
+            if (page && limit) {
+                users = await pagination(+page, +limit, "users");
+
+                removeUserPassword(users.data);
+            } else {
+                const [rows, fields] = await pool.execute(
+                    "SELECT * FROM users"
+                );
+                users = rows;
+
+                removeUserPassword(users);
             }
         } else if (id && id !== "all") {
             const [rows, fields] = await pool.execute(
@@ -29,9 +35,6 @@ const handleGetUsers = async (id) => {
         };
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -63,17 +66,14 @@ const handleCreateUser = async (email, password, name, phoneNum, role) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
-const handleUpdateUser = async (name, phoneNum, email) => {
+const handleUpdateUser = async (name, phoneNum, email, role) => {
     try {
         await pool.execute(
-            "update users set name = ?, phone_num = ? where email = ?",
-            [name, phoneNum, email]
+            "update users set name = ?, phone_num = ?, role_id = ? where email = ?",
+            [name, phoneNum, role, email]
         );
 
         let user = await checkUserEmailFromDB(email);
@@ -94,9 +94,6 @@ const handleUpdateUser = async (name, phoneNum, email) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -122,9 +119,6 @@ const handleDeleteUser = async (id) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -144,9 +138,6 @@ const checkUserEmailFromDB = async (email) => {
         }
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
     }
 };
 
@@ -157,9 +148,14 @@ const hashUserPassword = async (password) => {
         return hashPassword;
     } catch (error) {
         console.log(error);
-        return res.status(500).json({
-            message: "Error from server",
-        });
+    }
+};
+
+const removeUserPassword = async (userList) => {
+    for (let user in userList) {
+        if (userList[user].hasOwnProperty("password")) {
+            delete userList[user].password;
+        }
     }
 };
 

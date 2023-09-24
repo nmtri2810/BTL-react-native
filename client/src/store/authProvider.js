@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import Context from "./Context";
-import axios from "../services/customAxios";
+import axios from "../api/customAxios";
 
 export const AuthProvider = ({ children }) => {
     const [userInfo, setUserInfo] = useState({});

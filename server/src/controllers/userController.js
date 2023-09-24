@@ -3,6 +3,8 @@ import userService from "../services/userService.js";
 const getUsers = async (req, res) => {
     try {
         const id = req.query.id; //all || id
+        const page = req.query.page;
+        const limit = req.query.limit;
 
         if (!id) {
             return res.status(400).json({
@@ -10,7 +12,7 @@ const getUsers = async (req, res) => {
             });
         }
 
-        const data = await userService.handleGetUsers(id);
+        const data = await userService.handleGetUsers(id, page, limit);
 
         return res.status(data.status).json({
             message: data.message,
@@ -57,15 +59,20 @@ const createUser = async (req, res) => {
 //update user by email
 const updateUser = async (req, res) => {
     try {
-        const { name, phoneNum, email } = req.body;
+        const { name, phoneNum, email, role } = req.body;
 
-        if (!name || !phoneNum || !email) {
+        if (!name || !phoneNum || !email || !role) {
             return res.status(400).json({
                 message: "Missing required parameter",
             });
         }
 
-        const data = await userService.handleUpdateUser(name, phoneNum, email);
+        const data = await userService.handleUpdateUser(
+            name,
+            phoneNum,
+            email,
+            role
+        );
 
         return res.status(data.status).json({
             message: data.message,

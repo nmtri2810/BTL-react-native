@@ -3,11 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/pages/Login";
 import Home from "./components/pages/Home";
 import Users from "./components/pages/Users/Users";
-import Roles from "./components/pages/Roles";
 import Reservations from "./components/pages/Reservations";
 import Deals from "./components/pages/Deals";
-import News from "./components/pages/News";
-import Notifications from "./components/pages/Notifications";
 import Unauthorized from "./components/pages/Unauthorized";
 import NotFound from "./components/pages/NotFound";
 
@@ -26,20 +23,15 @@ function App() {
                         <Route element={<NavBarLayout />}>
                             <Route path="/" element={<Home />} />
                             <Route path="/users" element={<Users />} />
-                            <Route path="/roles" element={<Roles />} />
                             <Route
                                 path="/reservations"
                                 element={<Reservations />}
                             />
                             <Route path="/deals" element={<Deals />} />
-                            <Route path="/news" element={<News />} />
-                            <Route
-                                path="/notifications"
-                                element={<Notifications />}
-                            />
                         </Route>
                     </Route>
 
+                    {/* small bug with refresh token to delete user*/}
                     <Route element={<PrivateRoutes allowedRoles={"US"} />}>
                         <Route
                             path="/unauthorized"
