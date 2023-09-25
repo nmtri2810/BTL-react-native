@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./components/pages/Login";
 import Home from "./components/pages/Home";
 import Users from "./components/pages/Users/Users";
-import Reservations from "./components/pages/Reservations";
-import Deals from "./components/pages/Deals";
+import Reservations from "./components/pages/Reservations/Reservations";
+import Deals from "./components/pages/Deals/Deals";
 import Unauthorized from "./components/pages/Unauthorized";
 import NotFound from "./components/pages/NotFound";
 

@@ -1,14 +1,16 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
+import { Avatar, Dropdown } from "flowbite-react";
 
 import useAuth from "../../hooks/useAuth";
-import { Avatar, Dropdown } from "flowbite-react";
+import axios from "../../api/customAxios";
 
 const NavBar = () => {
     const { auth } = useAuth();
 
     const handleLogout = () => {
-        alert("Logout");
+        axios.post("logout");
+        window.location.reload();
     };
 
     return (

@@ -21,20 +21,14 @@ const Users = () => {
     const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
-        let isMounted = true;
-        const controller = new AbortController();
-
         const fetchData = async () => {
             try {
                 const res = await axiosPrivate.get(
-                    `users?id=all&sort=${sortValue}&page=${currentPage}&limit=${currentLimit}`,
-                    {
-                        signal: controller.signal,
-                    }
+                    `users?id=all&sort=${sortValue}&page=${currentPage}&limit=${currentLimit}`
                 );
                 setTotalPages(res.data.users.pagination.totalPages);
                 setCRUDState(false);
-                isMounted && setUserList(res.data.users.data);
+                setUserList(res.data.users.data);
             } catch (error) {
                 console.log(error);
                 navigate("/login", { replace: true });
@@ -43,11 +37,6 @@ const Users = () => {
         };
 
         fetchData();
-
-        return () => {
-            isMounted = false;
-            isMounted && controller.abort();
-        };
     }, [
         axiosPrivate,
         navigate,
