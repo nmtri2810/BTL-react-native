@@ -5,6 +5,7 @@ const getUsers = async (req, res) => {
         const id = req.query.id; //all || id
         const page = req.query.page;
         const limit = req.query.limit;
+        const sortValue = req.query.sort;
 
         if (!id) {
             return res.status(400).json({
@@ -12,7 +13,12 @@ const getUsers = async (req, res) => {
             });
         }
 
-        const data = await userService.handleGetUsers(id, page, limit);
+        const data = await userService.handleGetUsers(
+            id,
+            page,
+            limit,
+            sortValue
+        );
 
         return res.status(data.status).json({
             message: data.message,

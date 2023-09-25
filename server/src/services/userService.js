@@ -3,12 +3,12 @@ import bcrypt from "bcrypt";
 import pool from "../configs/connectDB.js";
 import { pagination } from "../controllers/paginationController.js";
 
-const handleGetUsers = async (id, page, limit) => {
+const handleGetUsers = async (id, page, limit, sortValue) => {
     try {
         let users;
         if (id === "all") {
-            if (page && limit) {
-                users = await pagination(+page, +limit, "users");
+            if (page && limit && sortValue) {
+                users = await pagination(+page, +limit, "users", sortValue);
 
                 removeUserPassword(users.data);
             } else {

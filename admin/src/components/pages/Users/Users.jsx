@@ -14,6 +14,7 @@ const Users = () => {
 
     const [userList, setUserList] = useState([]);
     const [CRUDState, setCRUDState] = useState(false);
+    const [sortValue, setSortValue] = useState("desc");
 
     const [currentPage, setCurrentPage] = useState(1);
     const [currentLimit] = useState(5);
@@ -26,7 +27,7 @@ const Users = () => {
         const fetchData = async () => {
             try {
                 const res = await axiosPrivate.get(
-                    `users?id=all&page=${currentPage}&limit=${currentLimit}`,
+                    `users?id=all&sort=${sortValue}&page=${currentPage}&limit=${currentLimit}`,
                     {
                         signal: controller.signal,
                     }
@@ -47,7 +48,14 @@ const Users = () => {
             isMounted = false;
             isMounted && controller.abort();
         };
-    }, [axiosPrivate, navigate, CRUDState, currentPage, currentLimit]);
+    }, [
+        axiosPrivate,
+        navigate,
+        CRUDState,
+        currentPage,
+        currentLimit,
+        sortValue,
+    ]);
 
     const setRole = (roleId) => {
         switch (roleId) {
@@ -62,24 +70,42 @@ const Users = () => {
         }
     };
 
+    const handleSortChange = (e) => {
+        setSortValue(e.target.value);
+    };
+
     return (
         <Container>
             <h1 className="text-3xl font-bold mb-4">Manage Users</h1>
             {userList?.length ? (
                 <div className="body">
-                    <div className="mb-4">
-                        <button
-                            onClick={() => window.location.reload()}
-                            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center mr-2"
-                        >
-                            <i className="fa-solid fa-rotate-right mr-2"></i>
-                            Refresh
-                        </button>
-                        <CreateUserModal
-                            onUserCreated={() => {
-                                setCRUDState(true);
-                            }}
-                        />
+                    <div className="mb-4 flex justify-between">
+                        <div>
+                            <button
+                                onClick={() => window.location.reload()}
+                                className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center mr-2"
+                            >
+                                <i className="fa-solid fa-rotate-right mr-2"></i>
+                                Refresh
+                            </button>
+                            <CreateUserModal
+                                onUserCreated={() => {
+                                    setCRUDState(true);
+                                }}
+                            />
+                        </div>
+                        <div>
+                            <select
+                                name="sort"
+                                id="sort"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                                value={sortValue}
+                                onChange={handleSortChange}
+                            >
+                                <option value="desc">Latest</option>
+                                <option value="asc">Oldest</option>
+                            </select>
+                        </div>
                     </div>
                     <div className="h-80">
                         <div className="mx-auto overflow-x-auto shadow-md sm:rounded-lg">
