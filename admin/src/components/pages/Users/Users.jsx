@@ -23,9 +23,7 @@ const Users = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axiosPrivate.get(
-                    `users?id=all&sort=${sortValue}&page=${currentPage}&limit=${currentLimit}`
-                );
+                const res = await axiosPrivate.get(`users?id=all&sort=${sortValue}&page=${currentPage}&limit=${currentLimit}`);
                 setTotalPages(res.data.users.pagination.totalPages);
                 setCRUDState(false);
                 setUserList(res.data.users.data);
@@ -37,14 +35,7 @@ const Users = () => {
         };
 
         fetchData();
-    }, [
-        axiosPrivate,
-        navigate,
-        CRUDState,
-        currentPage,
-        currentLimit,
-        sortValue,
-    ]);
+    }, [axiosPrivate, navigate, CRUDState, currentPage, currentLimit, sortValue]);
 
     const setRole = (roleId) => {
         switch (roleId) {
@@ -126,51 +117,18 @@ const Users = () => {
                                 </thead>
                                 <tbody>
                                     {userList.map((user, index) => (
-                                        <tr
-                                            key={index}
-                                            className="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-200"
-                                        >
-                                            <th
-                                                scope="row"
-                                                className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                            >
-                                                {(currentPage - 1) *
-                                                    currentLimit +
-                                                    index +
-                                                    1}
+                                        <tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-200">
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {(currentPage - 1) * currentLimit + index + 1}
                                             </th>
+                                            <td className="px-6 py-4">{user.id}</td>
+                                            <td className="px-6 py-4">{user.email}</td>
+                                            <td className="px-6 py-4">{user.name}</td>
+                                            <td className="px-6 py-4">{user.phone_num}</td>
+                                            <td className="px-6 py-4">{setRole(user.role_id)}</td>
                                             <td className="px-6 py-4">
-                                                {user.id}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {user.email}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {user.name}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {user.phone_num}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                {setRole(user.role_id)}
-                                            </td>
-                                            <td className="px-6 py-4">
-                                                <EditUserModal
-                                                    email={user.email}
-                                                    name={user.name}
-                                                    phoneNum={user.phone_num}
-                                                    role={user.role_id}
-                                                    onUserEdit={() =>
-                                                        setCRUDState(true)
-                                                    }
-                                                />
-                                                <DeleteUserModal
-                                                    userId={user.id}
-                                                    email={user.email}
-                                                    onUserDelete={() =>
-                                                        setCRUDState(true)
-                                                    }
-                                                />
+                                                <EditUserModal email={user.email} name={user.name} phoneNum={user.phone_num} role={user.role_id} onUserEdit={() => setCRUDState(true)} />
+                                                <DeleteUserModal userId={user.id} email={user.email} onUserDelete={() => setCRUDState(true)} />
                                             </td>
                                         </tr>
                                     ))}
@@ -178,11 +136,7 @@ const Users = () => {
                             </table>
                         </div>
                     </div>
-                    <PaginatedItems
-                        currentPage={currentPage}
-                        setCurrentPage={(page) => setCurrentPage(page)}
-                        totalPages={totalPages}
-                    />
+                    <PaginatedItems currentPage={currentPage} setCurrentPage={(page) => setCurrentPage(page)} totalPages={totalPages} />
                 </div>
             ) : (
                 <p className="text-xl">No users to display</p>

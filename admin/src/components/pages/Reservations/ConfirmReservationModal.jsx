@@ -37,7 +37,8 @@ const ConfirmReservationModal = ({ email, phoneNum, name, reservationTime, numOf
                         <i className="fa-solid fa-circle-exclamation text-5xl mb-4 text-gray-400 dark:text-gray-200"></i>
                         <h3 className="mb-5 text-lg font-normal text-gray-500 dark:text-gray-400">
                             Send mail to {""}
-                            <span className="text-black font-bold">{email}</span> and message to phone number <span className="text-black font-bold">{phoneNum}</span> ?
+                            <span className="text-black font-bold">{email}</span> and message to phone number
+                            <span className="text-black font-bold">{phoneNum}</span> ?
                         </h3>
                         <div className="flex justify-center gap-4">
                             <Button onClick={handleSendEmailAndMessage}>Yes, I'm sure</Button>

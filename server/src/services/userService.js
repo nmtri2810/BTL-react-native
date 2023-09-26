@@ -12,18 +12,13 @@ const handleGetUsers = async (id, page, limit, sortValue) => {
 
                 removeUserPassword(users.data);
             } else {
-                const [rows, fields] = await pool.execute(
-                    "SELECT * FROM users"
-                );
+                const [rows, fields] = await pool.execute("SELECT * FROM users");
                 users = rows;
 
                 removeUserPassword(users);
             }
         } else if (id && id !== "all") {
-            const [rows, fields] = await pool.execute(
-                "SELECT * FROM users where id = ?",
-                [id]
-            );
+            const [rows, fields] = await pool.execute("SELECT * FROM users where id = ?", [id]);
             users = rows[0];
             delete users.password;
         }
@@ -50,10 +45,7 @@ const handleCreateUser = async (email, password, name, phoneNum, role) => {
         } else {
             const hashPassword = await hashUserPassword(password);
 
-            await pool.execute(
-                "INSERT INTO users(email, password, name, phone_num, role_id) VALUES (?, ?, ?, ?, ?)",
-                [email, hashPassword, name, phoneNum, role]
-            );
+            await pool.execute("INSERT INTO users(email, password, name, phone_num, role_id) VALUES (?, ?, ?, ?, ?)", [email, hashPassword, name, phoneNum, role]);
 
             user = await checkUserEmailFromDB(email);
             delete user.password;
@@ -71,10 +63,7 @@ const handleCreateUser = async (email, password, name, phoneNum, role) => {
 
 const handleUpdateUser = async (name, phoneNum, email, role) => {
     try {
-        await pool.execute(
-            "update users set name = ?, phone_num = ?, role_id = ? where email = ?",
-            [name, phoneNum, role, email]
-        );
+        await pool.execute("update users set name = ?, phone_num = ?, role_id = ? where email = ?", [name, phoneNum, role, email]);
 
         let user = await checkUserEmailFromDB(email);
 
@@ -99,10 +88,7 @@ const handleUpdateUser = async (name, phoneNum, email, role) => {
 
 const handleDeleteUser = async (id) => {
     try {
-        const [rows, fields] = await pool.execute(
-            "SELECT * FROM users where id = ?",
-            [id]
-        );
+        const [rows, fields] = await pool.execute("SELECT * FROM users where id = ?", [id]);
 
         if (!rows[0]) {
             return {
@@ -124,10 +110,7 @@ const handleDeleteUser = async (id) => {
 
 const checkUserEmailFromDB = async (email) => {
     try {
-        const [rows, fields] = await pool.execute(
-            "SELECT * FROM users where email = ?",
-            [email]
-        );
+        const [rows, fields] = await pool.execute("SELECT * FROM users where email = ?", [email]);
 
         const user = rows[0];
 

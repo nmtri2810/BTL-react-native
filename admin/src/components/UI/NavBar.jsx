@@ -14,15 +14,9 @@ const NavBar = () => {
     };
 
     return (
-        <nav
-            id="navbar"
-            className="bg-white border-gray-200 dark:bg-gray-900 shadow"
-        >
+        <nav id="navbar" className="bg-white border-gray-200 dark:bg-gray-900 shadow">
             <div className="max-w-screen-2xl flex flex-wrap items-center justify-between mx-auto p-4">
-                <div
-                    className="items-center justify-between hidden w-full md:flex md:w-auto"
-                    id="navbar-user"
-                >
+                <div className="items-center justify-between hidden w-full md:flex md:w-auto" id="navbar-user">
                     <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
                         <li>
                             <NavLink
@@ -58,25 +52,11 @@ const NavBar = () => {
                         </li>
                     </ul>
                 </div>
-                <Dropdown
-                    inline
-                    placement="bottom-end"
-                    label={
-                        <Avatar
-                            alt="User"
-                            img="https://cdn-icons-png.flaticon.com/512/1144/1144760.png"
-                            size="sm"
-                        />
-                    }
-                >
+                <Dropdown inline placement="bottom-end" label={<Avatar alt="User" img="https://cdn-icons-png.flaticon.com/512/1144/1144760.png" size="sm" />}>
                     <Dropdown.Header>
-                        <span className="block truncate text-sm font-medium">
-                            {auth.email}
-                        </span>
+                        <span className="block truncate text-sm font-medium">{auth.email}</span>
                     </Dropdown.Header>
-                    <Dropdown.Item onClick={handleLogout}>
-                        Sign out
-                    </Dropdown.Item>
+                    <Dropdown.Item onClick={handleLogout}>Sign out</Dropdown.Item>
                 </Dropdown>
                 <button
                     data-collapse-toggle="navbar-user"
@@ -85,20 +65,8 @@ const NavBar = () => {
                     aria-controls="navbar-user"
                     aria-expanded="false"
                 >
-                    <svg
-                        className="w-5 h-5"
-                        aria-hidden="true"
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 17 14"
-                    >
-                        <path
-                            stroke="currentColor"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M1 1h15M1 7h15M1 13h15"
-                        />
+                    <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 17 14">
+                        <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M1 1h15M1 7h15M1 13h15" />
                     </svg>
                 </button>
             </div>

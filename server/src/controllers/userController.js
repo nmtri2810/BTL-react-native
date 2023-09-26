@@ -13,12 +13,7 @@ const getUsers = async (req, res) => {
             });
         }
 
-        const data = await userService.handleGetUsers(
-            id,
-            page,
-            limit,
-            sortValue
-        );
+        const data = await userService.handleGetUsers(id, page, limit, sortValue);
 
         return res.status(data.status).json({
             message: data.message,
@@ -42,13 +37,7 @@ const createUser = async (req, res) => {
             });
         }
 
-        const data = await userService.handleCreateUser(
-            email,
-            password,
-            name,
-            phoneNum,
-            role
-        );
+        const data = await userService.handleCreateUser(email, password, name, phoneNum, role);
 
         return res.status(data.status).json({
             message: data.message,
@@ -73,12 +62,7 @@ const updateUser = async (req, res) => {
             });
         }
 
-        const data = await userService.handleUpdateUser(
-            name,
-            phoneNum,
-            email,
-            role
-        );
+        const data = await userService.handleUpdateUser(name, phoneNum, email, role);
 
         return res.status(data.status).json({
             message: data.message,

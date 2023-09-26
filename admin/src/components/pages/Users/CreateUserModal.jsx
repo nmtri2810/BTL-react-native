@@ -61,20 +61,12 @@ const CreateUserModal = ({ onUserCreated }) => {
                 <i className="fa-solid fa-plus mr-2"></i>
                 Create new user
             </button>
-            <Modal
-                dismissible
-                size="2xl"
-                show={props.openModal === "dismissible"}
-                onClose={() => props.setOpenModal(undefined)}
-            >
+            <Modal dismissible size="2xl" show={props.openModal === "dismissible"} onClose={() => props.setOpenModal(undefined)}>
                 <Modal.Header>CREATE NEW USER</Modal.Header>
                 <Modal.Body>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="form-group">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Email
                             </label>
                             <input
@@ -89,10 +81,7 @@ const CreateUserModal = ({ onUserCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="password"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Password
                             </label>
                             <input
@@ -107,10 +96,7 @@ const CreateUserModal = ({ onUserCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="name"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Name
                             </label>
                             <input
@@ -125,10 +111,7 @@ const CreateUserModal = ({ onUserCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="phoneNum"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="phoneNum" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Phone number
                             </label>
                             <input
@@ -143,10 +126,7 @@ const CreateUserModal = ({ onUserCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="role"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Role
                             </label>
                             <select

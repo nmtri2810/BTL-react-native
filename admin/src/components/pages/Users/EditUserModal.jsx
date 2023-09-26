@@ -47,26 +47,15 @@ const EditUserModal = ({ email, name, phoneNum, role, onUserEdit }) => {
 
     return (
         <>
-            <button
-                onClick={() => props.setOpenModal("dismissible")}
-                className="font-medium text-primary-600 hover:underline"
-            >
+            <button onClick={() => props.setOpenModal("dismissible")} className="font-medium text-primary-600 hover:underline">
                 Edit
             </button>
-            <Modal
-                dismissible
-                size="2xl"
-                show={props.openModal === "dismissible"}
-                onClose={() => props.setOpenModal(undefined)}
-            >
+            <Modal dismissible size="2xl" show={props.openModal === "dismissible"} onClose={() => props.setOpenModal(undefined)}>
                 <Modal.Header>EDIT USER</Modal.Header>
                 <Modal.Body>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="form-group">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Email
                             </label>
                             <input
@@ -82,10 +71,7 @@ const EditUserModal = ({ email, name, phoneNum, role, onUserEdit }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="name"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Name
                             </label>
                             <input
@@ -100,10 +86,7 @@ const EditUserModal = ({ email, name, phoneNum, role, onUserEdit }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="phoneNum"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="phoneNum" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Phone number
                             </label>
                             <input
@@ -118,10 +101,7 @@ const EditUserModal = ({ email, name, phoneNum, role, onUserEdit }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="role"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="role" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Role
                             </label>
                             <select

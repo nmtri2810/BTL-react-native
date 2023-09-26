@@ -15,10 +15,7 @@ const handleRegister = async (data) => {
         } else {
             const hashPassword = await hashUserPassword(data.password);
 
-            await pool.execute(
-                "INSERT INTO users(email, password) VALUES (?, ?)",
-                [data.email, hashPassword]
-            );
+            await pool.execute("INSERT INTO users(email, password) VALUES (?, ?)", [data.email, hashPassword]);
 
             user = await checkUserEmailFromDB(data.email);
 
@@ -63,26 +60,15 @@ const handleLogin = async (email, password) => {
                 };
             } else {
                 user = { id: user.id, role_id: user.role_id };
-                let accessToken = jwt.sign(
-                    { user },
-                    process.env.ACCESS_TOKEN_SECRET,
-                    {
-                        expiresIn: "30s",
-                    }
-                );
-                let refreshToken = jwt.sign(
-                    { user },
-                    process.env.REFRESH_TOKEN_SECRET,
-                    {
-                        expiresIn: "1d",
-                    }
-                );
+                let accessToken = jwt.sign({ user }, process.env.ACCESS_TOKEN_SECRET, {
+                    expiresIn: "30s",
+                });
+                let refreshToken = jwt.sign({ user }, process.env.REFRESH_TOKEN_SECRET, {
+                    expiresIn: "1d",
+                });
 
                 //store in DB ?
-                await pool.execute(
-                    "INSERT INTO refresh_tokens(refresh_token, user_id) VALUES (?, ?)",
-                    [refreshToken, user.id]
-                );
+                await pool.execute("INSERT INTO refresh_tokens(refresh_token, user_id) VALUES (?, ?)", [refreshToken, user.id]);
 
                 return {
                     status: 200,
@@ -100,16 +86,10 @@ const handleLogin = async (email, password) => {
 
 const handleLogout = async (refreshToken) => {
     try {
-        const [rows, fields] = await pool.execute(
-            "SELECT * FROM refresh_tokens where refresh_token = ?",
-            [refreshToken]
-        );
+        const [rows, fields] = await pool.execute("SELECT * FROM refresh_tokens where refresh_token = ?", [refreshToken]);
 
         if (rows[0]) {
-            await pool.execute(
-                "delete from refresh_tokens where refresh_token = ? ",
-                [refreshToken]
-            );
+            await pool.execute("delete from refresh_tokens where refresh_token = ? ", [refreshToken]);
         }
 
         return;
@@ -120,10 +100,7 @@ const handleLogout = async (refreshToken) => {
 
 const checkUserEmailFromDB = async (email) => {
     try {
-        const [rows, fields] = await pool.execute(
-            "SELECT * FROM users where email = ?",
-            [email]
-        );
+        const [rows, fields] = await pool.execute("SELECT * FROM users where email = ?", [email]);
 
         const user = rows[0];
 

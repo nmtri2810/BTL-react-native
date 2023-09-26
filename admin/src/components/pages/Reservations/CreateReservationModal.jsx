@@ -64,20 +64,12 @@ const CreateReservationModal = ({ onReservationCreated }) => {
                 <i className="fa-solid fa-plus mr-2"></i>
                 Create new reservation
             </button>
-            <Modal
-                dismissible
-                size="3xl"
-                show={props.openModal === "dismissible"}
-                onClose={() => props.setOpenModal(undefined)}
-            >
+            <Modal dismissible size="3xl" show={props.openModal === "dismissible"} onClose={() => props.setOpenModal(undefined)}>
                 <Modal.Header>CREATE NEW RESERVATION</Modal.Header>
                 <Modal.Body>
                     <div className="grid gap-4 sm:grid-cols-2">
                         <div className="form-group">
-                            <label
-                                htmlFor="reservationTime"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="reservationTime" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Reservation time
                             </label>
                             <input
@@ -86,18 +78,13 @@ const CreateReservationModal = ({ onReservationCreated }) => {
                                 id="reservationTime"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                                 required
-                                min={moment(new Date()).format(
-                                    "YYYY-MM-DDTHH:MM"
-                                )}
+                                min={moment(new Date()).format("YYYY-MM-DDTHH:MM")}
                                 value={reservationInput.reservationTime}
                                 onChange={handleInputChange}
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="numOfPeople"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="numOfPeople" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Number of people
                             </label>
                             <input
@@ -115,10 +102,7 @@ const CreateReservationModal = ({ onReservationCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="name"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="name" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Name
                             </label>
                             <input
@@ -133,10 +117,7 @@ const CreateReservationModal = ({ onReservationCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="phoneNum"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="phoneNum" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Phone number
                             </label>
                             <input
@@ -151,10 +132,7 @@ const CreateReservationModal = ({ onReservationCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="email"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Email
                             </label>
                             <input
@@ -169,10 +147,7 @@ const CreateReservationModal = ({ onReservationCreated }) => {
                             />
                         </div>
                         <div className="form-group">
-                            <label
-                                htmlFor="notes"
-                                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                            >
+                            <label htmlFor="notes" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
                                 Notes
                             </label>
                             <input
