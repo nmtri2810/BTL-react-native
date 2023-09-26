@@ -20,7 +20,11 @@ const initApiRoute = (app) => {
     router.put("/update-user", userController.updateUser);
     router.delete("/detele-user", userController.deleteUser);
 
-    router.get("/reservations", reservationController.getReservations);
+    router.get(
+        "/reservations",
+        handleAuthenticateToken,
+        reservationController.getReservations
+    );
     router.post("/create-reservation", reservationController.createReservation);
 
     return app.use("/api/", router);

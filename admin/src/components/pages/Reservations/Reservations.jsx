@@ -1,36 +1,54 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import moment from "moment";
 import { Badge } from "flowbite-react";
 
 import Container from "../../UI/Container";
-import axios from "../../../api/customAxios";
+import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import CreateReservationModal from "./CreateReservationModal";
+import PaginatedItems from "../../UI/PaginatedItems";
+import ConfirmReservationModal from "./ConfirmReservationModal";
 
 const Reservations = () => {
+    const axiosPrivate = useAxiosPrivate();
+    const navigate = useNavigate();
+
     const [reservationList, setReservationList] = useState([]);
+    const [CRUDState, setCRUDState] = useState(false);
+    const [statusId, setStatusId] = useState("all");
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentLimit] = useState(5);
+    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axios.get(`reservations?id=all`);
+                const res = await axiosPrivate.get(
+                    `reservations?id=all&status=${statusId}`
+                );
+                setCRUDState(false);
                 setReservationList(res.data.reservations);
             } catch (error) {
                 console.log(error);
+                navigate("/login", { replace: true });
+                window.location.reload();
             }
         };
 
         fetchData();
-    }, []);
+    }, [axiosPrivate, navigate, CRUDState, statusId]);
 
     const setStatus = (statusId) => {
         switch (statusId) {
             case "S1":
-                return "New";
+                return { text: "New", color: "warning" };
             case "S2":
-                return "Confirmed";
+                return { text: "Confirmed", color: "info" };
             case "S3":
-                return "Done";
+                return { text: "Done", color: "success" };
             case "S4":
-                return "Canceled";
+                return { text: "Canceled", color: "failure" };
             default:
                 return "";
         }
@@ -38,6 +56,10 @@ const Reservations = () => {
 
     const handleTimeFormat = (time) => {
         return moment(time).format("MMMM, Do YYYY HH:mm");
+    };
+
+    const handleChooseStatus = (e) => {
+        setStatusId(e.target.value);
     };
 
     return (
@@ -54,32 +76,32 @@ const Reservations = () => {
                                 <i className="fa-solid fa-rotate-right mr-2"></i>
                                 Refresh
                             </button>
-                            {/* <CreateUserModal
-                                onUserCreated={() => {
+                            <CreateReservationModal
+                                onReservationCreated={() => {
                                     setCRUDState(true);
                                 }}
-                            /> */}
+                            />
                         </div>
                         <div>
                             <select
                                 name="sort"
                                 id="sort"
                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                // value={sortValue}
-                                // onChange={handleSortChange}
+                                value={statusId}
+                                onChange={handleChooseStatus}
                             >
-                                <option value="">Reservation status</option>
-                                <option value="asc">New</option>
-                                <option value="asc">Confirmed</option>
-                                <option value="asc">Done</option>
-                                <option value="asc">Canceled</option>
+                                <option value="all">Reservation status</option>
+                                <option value="S1">New</option>
+                                <option value="S2">Confirmed</option>
+                                <option value="S3">Done</option>
+                                <option value="S4">Canceled</option>
                             </select>
                         </div>
                     </div>
                     <div className="h-80">
                         <div className="mx-auto overflow-x-auto shadow-md sm:rounded-lg">
                             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead className="text-sm text-gray-700 bg-gray-100">
+                                <thead className="text-sm text-slate-50 bg-[#eab849]">
                                     <tr>
                                         <th scope="col" className="px-6 py-3">
                                             No
@@ -152,35 +174,28 @@ const Reservations = () => {
                                                 <td className="px-6 py-4">
                                                     <Badge
                                                         size="sm"
-                                                        color="warning"
+                                                        color={
+                                                            setStatus(
+                                                                reservation.status_id
+                                                            ).color
+                                                        }
                                                     >
-                                                        {setStatus(
-                                                            reservation.status_id
-                                                        )}
+                                                        {
+                                                            setStatus(
+                                                                reservation.status_id
+                                                            ).text
+                                                        }
                                                     </Badge>
-                                                    {/* <Badge
-                                                        size="sm"
-                                                        color="info"
-                                                    >
-                                                        Confirmed
-                                                    </Badge>
-                                                    <Badge
-                                                        size="sm"
-                                                        color="success"
-                                                    >
-                                                        Done
-                                                    </Badge>
-                                                    <Badge
-                                                        size="sm"
-                                                        color="failure"
-                                                    >
-                                                        Canceled
-                                                    </Badge> */}
                                                 </td>
                                                 <td className="px-6 py-4">
-                                                    <button className="font-medium text-primary-600 hover:underline">
-                                                        Confirm
-                                                    </button>
+                                                    <ConfirmReservationModal
+                                                        email={
+                                                            reservation.email
+                                                        }
+                                                        phoneNum={
+                                                            reservation.phone_num
+                                                        }
+                                                    />
                                                     {/* <button className="font-medium text-primary-600 hover:underline">
                                                         Edit
                                                     </button>
@@ -195,11 +210,11 @@ const Reservations = () => {
                             </table>
                         </div>
                     </div>
-                    {/* <PaginatedItems
+                    <PaginatedItems
                         currentPage={currentPage}
                         setCurrentPage={(page) => setCurrentPage(page)}
                         totalPages={totalPages}
-                    /> */}
+                    />
                 </div>
             ) : (
                 <p className="text-xl">No reservations to display</p>

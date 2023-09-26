@@ -1,13 +1,20 @@
 import pool from "../configs/connectDB.js";
 
-const handleGetReservations = async (userId) => {
+const handleGetReservations = async (userId, status) => {
     try {
         let reservations;
         if (userId === "all") {
-            const [rows, fields] = await pool.execute(
-                "SELECT * FROM reservations"
-            );
-            reservations = rows;
+            if (status && status !== "all") {
+                const [rows, fields] = await pool.execute(
+                    `SELECT * FROM reservations where status_id = "${status}"`
+                );
+                reservations = rows;
+            } else {
+                const [rows, fields] = await pool.execute(
+                    "SELECT * FROM reservations"
+                );
+                reservations = rows;
+            }
         } else if (userId && userId !== "all") {
             const [rows, fields] = await pool.execute(
                 "SELECT * FROM reservations where user_id = ? order by id",
@@ -37,29 +44,36 @@ const handleCreateReservation = async (
     try {
         let user = await checkUserEmailFromDB(email);
 
-        await pool.execute(
-            "INSERT INTO reservations(reservation_time, num_of_people, name, phone_num, email, notes, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
-            [
-                reservationTime,
-                numOfPeople,
-                name,
-                phoneNum,
-                email,
-                notes,
-                user.id,
-            ]
-        );
+        if (user) {
+            await pool.execute(
+                "INSERT INTO reservations(reservation_time, num_of_people, name, phone_num, email, notes, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                [
+                    reservationTime,
+                    numOfPeople,
+                    name,
+                    phoneNum,
+                    email,
+                    notes,
+                    user.id,
+                ]
+            );
 
-        const [rows, fields] = await pool.execute(
-            "select reservations.* from reservations join users on reservations.user_id = users.id where reservations.user_id = ? order by reservations.id desc limit 1",
-            [user.id]
-        );
+            const [rows, fields] = await pool.execute(
+                "select reservations.* from reservations join users on reservations.user_id = users.id where reservations.user_id = ? order by reservations.id desc limit 1",
+                [user.id]
+            );
 
-        return {
-            status: 201,
-            message: "Ok",
-            reservation: rows[0],
-        };
+            return {
+                status: 201,
+                message: "Ok",
+                reservation: rows[0],
+            };
+        } else {
+            return {
+                status: 401,
+                message: "User not exist",
+            };
+        }
     } catch (error) {
         console.log(error);
     }
