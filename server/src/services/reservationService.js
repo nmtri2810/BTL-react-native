@@ -4,7 +4,7 @@ const handleGetReservations = async (userId, status) => {
     try {
         let reservations;
         if (userId === "all") {
-            if (status && status !== "all") {
+            if (status && status !== "") {
                 const [rows, fields] = await pool.execute(
                     `SELECT * FROM reservations where status_id = "${status}"`
                 );

@@ -15,18 +15,16 @@ const Reservations = () => {
 
     const [reservationList, setReservationList] = useState([]);
     const [CRUDState, setCRUDState] = useState(false);
-    const [statusId, setStatusId] = useState("all");
+    const [statusId, setStatusId] = useState("");
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const [currentLimit] = useState(5);
-    const [totalPages, setTotalPages] = useState(0);
+    // const [currentPage, setCurrentPage] = useState(1);
+    // const [currentLimit] = useState(5);
+    // const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axiosPrivate.get(
-                    `reservations?id=all&status=${statusId}`
-                );
+                const res = await axiosPrivate.get(`reservations?id=all&status=${statusId}`);
                 setCRUDState(false);
                 setReservationList(res.data.reservations);
             } catch (error) {
@@ -65,160 +63,130 @@ const Reservations = () => {
     return (
         <Container>
             <h1 className="text-3xl font-bold mb-4">Manage Reservations</h1>
-            {reservationList?.length ? (
-                <div className="body">
-                    <div className="mb-4 flex justify-between">
-                        <div>
-                            <button
-                                onClick={() => window.location.reload()}
-                                className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center mr-2"
-                            >
-                                <i className="fa-solid fa-rotate-right mr-2"></i>
-                                Refresh
-                            </button>
-                            <CreateReservationModal
-                                onReservationCreated={() => {
-                                    setCRUDState(true);
-                                }}
-                            />
-                        </div>
-                        <div>
-                            <select
-                                name="sort"
-                                id="sort"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                                value={statusId}
-                                onChange={handleChooseStatus}
-                            >
-                                <option value="all">Reservation status</option>
-                                <option value="S1">New</option>
-                                <option value="S2">Confirmed</option>
-                                <option value="S3">Done</option>
-                                <option value="S4">Canceled</option>
-                            </select>
-                        </div>
+            <div className="body">
+                <div className="mb-4 flex justify-between">
+                    <div>
+                        <button
+                            onClick={() => window.location.reload()}
+                            className="text-white bg-green-600 hover:bg-green-700 focus:ring-4 focus:outline-none focus:ring-green-300 font-medium rounded-lg text-base px-4 py-2 text-center mr-2"
+                        >
+                            <i className="fa-solid fa-rotate-right mr-2"></i>
+                            Refresh
+                        </button>
+                        <CreateReservationModal
+                            onReservationCreated={() => {
+                                setCRUDState(true);
+                            }}
+                        />
                     </div>
-                    <div className="h-80">
-                        <div className="mx-auto overflow-x-auto shadow-md sm:rounded-lg">
-                            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                                <thead className="text-sm text-slate-50 bg-[#eab849]">
-                                    <tr>
-                                        <th scope="col" className="px-6 py-3">
-                                            No
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Reservation ID
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Email
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Phone number
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Name
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Reservation time
-                                        </th>
-                                        <th scope="col" className="py-3">
-                                            Number of people
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Notes
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Status
-                                        </th>
-                                        <th scope="col" className="px-6 py-3">
-                                            Action
-                                        </th>
-                                    </tr>
-                                </thead>
+                    <div>
+                        <select
+                            name="sort"
+                            id="sort"
+                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            value={statusId}
+                            onChange={handleChooseStatus}
+                        >
+                            <option value="">Reservation status</option>
+                            <option value="S1">New</option>
+                            <option value="S2">Confirmed</option>
+                            <option value="S3">Done</option>
+                            <option value="S4">Canceled</option>
+                        </select>
+                    </div>
+                </div>
+                <div className="h-80">
+                    <div className="mx-auto overflow-x-auto shadow-md sm:rounded-lg">
+                        <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                            <thead className="text-sm text-slate-50 bg-[#eab849]">
+                                <tr>
+                                    <th scope="col" className="px-6 py-3">
+                                        No
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Reservation ID
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Email
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Phone number
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Name
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Reservation time
+                                    </th>
+                                    <th scope="col" className="py-3">
+                                        Number of people
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Notes
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Status
+                                    </th>
+                                    <th scope="col" className="px-6 py-3">
+                                        Action
+                                    </th>
+                                </tr>
+                            </thead>
+                            {reservationList?.length ? (
                                 <tbody>
-                                    {reservationList.map(
-                                        (reservation, index) => (
-                                            <tr
-                                                key={index}
-                                                className="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-200"
-                                            >
-                                                <th
-                                                    scope="row"
-                                                    className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                                                >
-                                                    {index + 1}
-                                                </th>
-                                                <td className="px-6 py-4">
-                                                    {reservation.id}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {reservation.email}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {reservation.phone_num}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {reservation.name}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {handleTimeFormat(
-                                                        reservation.reservation_time
-                                                    )}
-                                                </td>
-                                                <td className="py-4">
-                                                    {reservation.num_of_people}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    {reservation.notes}
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <Badge
-                                                        size="sm"
-                                                        color={
-                                                            setStatus(
-                                                                reservation.status_id
-                                                            ).color
-                                                        }
-                                                    >
-                                                        {
-                                                            setStatus(
-                                                                reservation.status_id
-                                                            ).text
-                                                        }
-                                                    </Badge>
-                                                </td>
-                                                <td className="px-6 py-4">
-                                                    <ConfirmReservationModal
-                                                        email={
-                                                            reservation.email
-                                                        }
-                                                        phoneNum={
-                                                            reservation.phone_num
-                                                        }
-                                                    />
-                                                    {/* <button className="font-medium text-primary-600 hover:underline">
+                                    {reservationList.map((reservation, index) => (
+                                        <tr key={index} className="bg-white border-b dark:bg-gray-900 dark:border-gray-700 hover:bg-gray-200">
+                                            <th scope="row" className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                                {index + 1}
+                                            </th>
+                                            <td className="px-6 py-4">{reservation.id}</td>
+                                            <td className="px-6 py-4">{reservation.email}</td>
+                                            <td className="px-6 py-4">{reservation.phone_num}</td>
+                                            <td className="px-6 py-4">{reservation.name}</td>
+                                            <td className="px-6 py-4">{handleTimeFormat(reservation.reservation_time)}</td>
+                                            <td className="py-4">{reservation.num_of_people}</td>
+                                            <td className="px-6 py-4">{reservation.notes}</td>
+                                            <td className="px-6 py-4">
+                                                <Badge size="sm" color={setStatus(reservation.status_id).color}>
+                                                    {setStatus(reservation.status_id).text}
+                                                </Badge>
+                                            </td>
+                                            <td className="px-6 py-4">
+                                                <ConfirmReservationModal
+                                                    email={reservation.email}
+                                                    phoneNum={reservation.phone_num}
+                                                    name={reservation.name}
+                                                    reservationTime={reservation.reservation_time}
+                                                    numOfPeople={reservation.num_of_people}
+                                                    notes={reservation.notes}
+                                                    onConfirmed={() => setCRUDState(true)}
+                                                />
+                                                {/* <button className="font-medium text-primary-600 hover:underline">
                                                         Edit
                                                     </button>
                                                     <button className="font-medium text-red-600 hover:underline ml-3">
                                                         Delete
                                                     </button> */}
-                                                </td>
-                                            </tr>
-                                        )
-                                    )}
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
-                            </table>
-                        </div>
+                            ) : (
+                                <tbody>
+                                    <tr>
+                                        <td className="px-6 py-3 text-lg">No reservations with {setStatus(statusId).text} status to display</td>
+                                    </tr>
+                                </tbody>
+                            )}
+                        </table>
                     </div>
-                    <PaginatedItems
-                        currentPage={currentPage}
-                        setCurrentPage={(page) => setCurrentPage(page)}
-                        totalPages={totalPages}
-                    />
                 </div>
-            ) : (
-                <p className="text-xl">No reservations to display</p>
-            )}
+                {/* <PaginatedItems
+                    currentPage={currentPage}
+                    setCurrentPage={(page) => setCurrentPage(page)}
+                    totalPages={totalPages}
+                /> */}
+            </div>
         </Container>
     );
 };

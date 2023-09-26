@@ -5,6 +5,7 @@ import authController from "../controllers/authController.js";
 import reservationController from "../controllers/reservationController.js";
 import { handleAuthenticateToken } from "../middlewares/verifyJWT.js";
 import refreshTokenController from "../controllers/refreshTokenController.js";
+import sendInfo from "../controllers/sendInfoController.js";
 
 const router = express.Router();
 
@@ -20,12 +21,10 @@ const initApiRoute = (app) => {
     router.put("/update-user", userController.updateUser);
     router.delete("/detele-user", userController.deleteUser);
 
-    router.get(
-        "/reservations",
-        handleAuthenticateToken,
-        reservationController.getReservations
-    );
+    router.get("/reservations", handleAuthenticateToken, reservationController.getReservations);
     router.post("/create-reservation", reservationController.createReservation);
+
+    router.post("/send-info", sendInfo);
 
     return app.use("/api/", router);
 };
