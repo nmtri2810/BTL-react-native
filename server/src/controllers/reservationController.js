@@ -49,7 +49,31 @@ const createReservation = async (req, res) => {
     }
 };
 
+const updateStatus = async (req, res) => {
+    try {
+        const { reservationId, statusId } = req.body;
+
+        if (!reservationId || !statusId) {
+            return res.status(400).json({
+                message: "Missing required parameter",
+            });
+        }
+
+        const data = await reservationService.handleUpdateStatus(reservationId, statusId);
+
+        return res.status(data.status).json({
+            message: data.message,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            message: "Error from server",
+        });
+    }
+};
+
 export default {
     getReservations,
     createReservation,
+    updateStatus,
 };

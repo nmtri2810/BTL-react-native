@@ -23,6 +23,7 @@ const initApiRoute = (app) => {
 
     router.get("/reservations", handleAuthenticateToken, reservationController.getReservations);
     router.post("/create-reservation", reservationController.createReservation);
+    router.put("/update-status", reservationController.updateStatus);
 
     router.post("/send-info", sendInfo);
 

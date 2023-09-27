@@ -62,6 +62,19 @@ const handleCreateReservation = async (reservationTime, numOfPeople, name, phone
     }
 };
 
+const handleUpdateStatus = async (reservationId, statusId) => {
+    try {
+        await pool.execute(`UPDATE reservations SET status_id = ? WHERE id = ?`, [statusId, reservationId]);
+
+        return {
+            status: 200,
+            message: "Updated",
+        };
+    } catch (error) {
+        console.log(error);
+    }
+};
+
 const checkUserEmailFromDB = async (email) => {
     try {
         const [rows, fields] = await pool.execute("SELECT * FROM users where email = ?", [email]);
@@ -78,4 +91,4 @@ const checkUserEmailFromDB = async (email) => {
     }
 };
 
-export default { handleGetReservations, handleCreateReservation };
+export default { handleGetReservations, handleCreateReservation, handleUpdateStatus };

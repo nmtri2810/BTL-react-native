@@ -8,6 +8,8 @@ import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import CreateReservationModal from "./CreateReservationModal";
 import PaginatedItems from "../../UI/PaginatedItems";
 import ConfirmReservationModal from "./ConfirmReservationModal";
+import DoneReservationModal from "./DoneReservationModal";
+import CancelReservationModal from "./CancelReservationModal";
 
 const Reservations = () => {
     const axiosPrivate = useAxiosPrivate();
@@ -152,21 +154,24 @@ const Reservations = () => {
                                                 </Badge>
                                             </td>
                                             <td className="px-6 py-4">
-                                                <ConfirmReservationModal
-                                                    email={reservation.email}
-                                                    phoneNum={reservation.phone_num}
-                                                    name={reservation.name}
-                                                    reservationTime={reservation.reservation_time}
-                                                    numOfPeople={reservation.num_of_people}
-                                                    notes={reservation.notes}
-                                                    onConfirmed={() => setCRUDState(true)}
-                                                />
-                                                {/* <button className="font-medium text-primary-600 hover:underline">
-                                                        Edit
-                                                    </button>
-                                                    <button className="font-medium text-red-600 hover:underline ml-3">
-                                                        Delete
-                                                    </button> */}
+                                                {reservation.status_id === "S1" && (
+                                                    <ConfirmReservationModal
+                                                        email={reservation.email}
+                                                        phoneNum={reservation.phone_num}
+                                                        name={reservation.name}
+                                                        reservationTime={reservation.reservation_time}
+                                                        numOfPeople={reservation.num_of_people}
+                                                        notes={reservation.notes}
+                                                        reservationId={reservation.id}
+                                                        onConfirmed={() => setCRUDState(true)}
+                                                    />
+                                                )}
+                                                {reservation.status_id === "S2" && (
+                                                    <div className="flex">
+                                                        <DoneReservationModal reservationId={reservation.id} onConfirmed={() => setCRUDState(true)} />
+                                                        <CancelReservationModal reservationId={reservation.id} onConfirmed={() => setCRUDState(true)} />
+                                                    </div>
+                                                )}
                                             </td>
                                         </tr>
                                     ))}
