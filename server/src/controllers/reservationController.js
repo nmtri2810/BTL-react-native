@@ -3,7 +3,9 @@ import reservationService from "../services/reservationService.js";
 const getReservations = async (req, res) => {
     try {
         const userId = req.query.id; //all || id
-        const status = req.query.status;
+        const status = req.query.status; // all || S1-S4
+        const page = req.query.page;
+        const limit = req.query.limit;
 
         if (!userId) {
             return res.status(400).json({
@@ -11,7 +13,7 @@ const getReservations = async (req, res) => {
             });
         }
 
-        const data = await reservationService.handleGetReservations(userId, status);
+        const data = await reservationService.handleGetReservations(userId, status, page, limit);
 
         return res.status(data.status).json({
             message: data.message,

@@ -1,15 +1,14 @@
 import pool from "../configs/connectDB.js";
+import { pagination } from "../controllers/paginationController.js";
 
-const handleGetReservations = async (userId, status) => {
+const handleGetReservations = async (userId, status, page, limit) => {
     try {
         let reservations;
         if (userId === "all") {
-            if (status && status !== "") {
-                const [rows, fields] = await pool.execute(`SELECT * FROM reservations where status_id = "${status}"`);
-                reservations = rows;
+            if (page && limit && status && status !== "all") {
+                reservations = await pagination(+page, +limit, "reservations", "desc", status);
             } else {
-                const [rows, fields] = await pool.execute("SELECT * FROM reservations");
-                reservations = rows;
+                reservations = await pagination(+page, +limit, "reservations", "desc");
             }
         } else if (userId && userId !== "all") {
             const [rows, fields] = await pool.execute("SELECT * FROM reservations where user_id = ? order by id", [userId]);

@@ -17,18 +17,19 @@ const Reservations = () => {
 
     const [reservationList, setReservationList] = useState([]);
     const [CRUDState, setCRUDState] = useState(false);
-    const [statusId, setStatusId] = useState("");
+    const [statusId, setStatusId] = useState("all");
 
-    // const [currentPage, setCurrentPage] = useState(1);
-    // const [currentLimit] = useState(5);
-    // const [totalPages, setTotalPages] = useState(0);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [currentLimit] = useState(5);
+    const [totalPages, setTotalPages] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await axiosPrivate.get(`reservations?id=all&status=${statusId}`);
+                const res = await axiosPrivate.get(`reservations?id=all&status=${statusId}&page=${currentPage}&limit=${currentLimit}`);
+                setTotalPages(res.data.reservations.pagination.totalPages);
                 setCRUDState(false);
-                setReservationList(res.data.reservations);
+                setReservationList(res.data.reservations.data);
             } catch (error) {
                 console.log(error);
                 navigate("/login", { replace: true });
@@ -37,7 +38,7 @@ const Reservations = () => {
         };
 
         fetchData();
-    }, [axiosPrivate, navigate, CRUDState, statusId]);
+    }, [axiosPrivate, navigate, CRUDState, statusId, currentPage, currentLimit]);
 
     const setStatus = (statusId) => {
         switch (statusId) {
@@ -89,7 +90,7 @@ const Reservations = () => {
                             value={statusId}
                             onChange={handleChooseStatus}
                         >
-                            <option value="">Reservation status</option>
+                            <option value="all">Reservation status</option>
                             <option value="S1">New</option>
                             <option value="S2">Confirmed</option>
                             <option value="S3">Done</option>
@@ -97,7 +98,7 @@ const Reservations = () => {
                         </select>
                     </div>
                 </div>
-                <div className="h-80">
+                <div className="h-[28rem]">
                     <div className="mx-auto overflow-x-auto shadow-md sm:rounded-lg">
                         <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead className="text-sm text-slate-50 bg-[#eab849]">
@@ -186,11 +187,7 @@ const Reservations = () => {
                         </table>
                     </div>
                 </div>
-                {/* <PaginatedItems
-                    currentPage={currentPage}
-                    setCurrentPage={(page) => setCurrentPage(page)}
-                    totalPages={totalPages}
-                /> */}
+                <PaginatedItems currentPage={currentPage} setCurrentPage={(page) => setCurrentPage(page)} totalPages={totalPages} />
             </div>
         </Container>
     );
